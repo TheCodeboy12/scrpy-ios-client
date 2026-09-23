@@ -1,24 +1,34 @@
-# Scrcpy-iOS (ScrcpyKit) 📱✨
+# Scrcpy for iOS (ScrcpyKit) 📱✨
 
-A high-performance, native iOS/iPadOS client for **[scrcpy](https://github.com/Genymobile/scrcpy)** built in pure Swift.
+A high-performance, native iOS/iPadOS client for **[scrcpy](https://github.com/Genymobile/scrcpy)** built entirely in pure Swift.
 
-Unlike older ports (such as `wsvn53/scrcpy-ios`) that compile desktop C code, SDL2, and FFmpeg for iOS, **Scrcpy-iOS** is built from the ground up for Apple platforms using **Apple VideoToolbox**, **Network.framework**, and **SwiftUI**.
+Stream and control your Android device directly from your iPhone or iPad over Wi-Fi with ultra-low latency, hardware-accelerated Apple VideoToolbox decoding, and full multi-touch support—no computer required.
 
 ---
 
-## Why This Client vs Older Ports?
+## Screenshots
 
-| Feature | `wsvn53/scrcpy-ios` (Old Port) | **Scrcpy-iOS (This Project)** |
-|---|---|---|
-| **Architecture** | Desktop C / SDL2 / FFmpeg / libssh | **Pure Swift + VideoToolbox + Network.framework** |
-| **Video Decoding** | FFmpeg software / CPU heavy | **Hardware VideoToolbox (Zero-copy GPU direct)** |
-| **Latency** | 100ms - 250ms (noticeable lag) | **< 20ms (butter-smooth real-time)** |
-| **Battery & Thermals** | Extreme heat & battery drain | **Minimal CPU usage, cool and efficient** |
-| **Touch Controls** | Clunky SDL mouse emulation | **Native iOS multi-touch, drag, fling & gestures** |
-| **Android Navigation** | Limited / desktop keyboard shortcuts | **Dedicated floating Android Navigation Bar** |
-| **ADB Connection** | Requires external bridge or PC | **Built-in Pure Swift ADB Client over Wi-Fi** |
-| **Scrcpy Compatibility** | Stuck on old scrcpy v1.x/v2 | **Compatible with scrcpy v2.x / v3.x / v4.x** |
-| **Binary Size** | ~100+ MB with FFmpeg & SDL | **~5 MB total app bundle** |
+| Screen Mirroring | Camera Stream | Wireless ADB Pairing |
+|:---:|:---:|:---:|
+| <img src="docs/screenshots/screen_mirroring.png" width="250" alt="Screen Mirroring" /> | <img src="docs/screenshots/camera_stream.png" width="250" alt="Camera Stream" /> | <img src="docs/screenshots/adb_pairing.png" width="250" alt="Wireless ADB Pairing" /> |
+
+| Live Mirroring Session | Home Screen Icon |
+|:---:|:---:|
+| <img src="docs/screenshots/live_session.png" width="250" alt="Live Mirroring Session" /> | <img src="docs/screenshots/home_screen.png" width="250" alt="Home Screen Icon" /> |
+
+---
+
+## Key Highlights
+
+- ⚡ **Ultra-Low Latency (< 20ms)**: Zero-copy direct hardware decoding into `AVSampleBufferDisplayLayer` via Apple Silicon Media Engine.
+- 📱 **Pure Swift Architecture**: Built from scratch using modern Apple frameworks (`VideoToolbox`, `Network.framework`, `AVFoundation`, and `SwiftUI`). No external heavy dependencies like SDL or FFmpeg.
+- 📶 **Autonomous Wireless Connection**: iPhone communicates directly with Android over TCP. Includes a built-in pure Swift ADB client supporting handshake, RSA-2048 authentication, server push, and multi-channel multiplexing.
+- 🔑 **Built-in Android 11+ Wireless Pairing**: Pair once with a 6-digit code and pairing port directly from your iOS device without touching a terminal or PC.
+- 📷 **Direct Android Camera Streaming**: Stream high-definition video from Android's **Back**, **Front Selfie**, or **External USB** camera lenses with microphone audio forwarding, zoom controls, and flashlight/torch toggle.
+- 💾 **Device Profiles & Persistent Settings**: Automatically remembers all connected devices, lets you name them (e.g. "Living Room TV Box", "Pixel Fold"), and saves your preferred resolution, framerate, bitrate, codec, and audio choices across app launches.
+- 👆 **Sub-Pixel Multi-Touch & Gestures**: Native iOS touch events mapped directly into Android touch coordinates with multi-finger drag, fling, and tap support.
+- 🎮 **Dedicated Android Navigation Bar**: Back, Home, App Switcher / Recents, Power, Volume, and Screen Rotation controls, with a dedicated thumb-friendly dock in landscape mode.
+- ⌨ **Live Text & Clipboard Sync**: Type into Android input fields directly using the iOS on-screen keyboard, with seamless bidirectional clipboard synchronization.
 
 ---
 
@@ -26,8 +36,8 @@ Unlike older ports (such as `wsvn53/scrcpy-ios`) that compile desktop C code, SD
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        Scrcpy-iOS SwiftUI App                          │
-│        (DeviceDiscoveryView, MirrorSessionView, SettingsView)          │
+│                        Scrcpy for iOS (SwiftUI)                        │
+│        (DeviceDiscoveryView, MirrorSessionView, ProfileManager)        │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │
 ┌───────────────────────────────────▼────────────────────────────────────┐
@@ -38,12 +48,15 @@ Unlike older ports (such as `wsvn53/scrcpy-ios`) that compile desktop C code, SD
 │   │  (Connection Coordinator)   │     │ (Multi-touch & Gestures)   │   │
 │   └──────────────┬──────────────┘     └─────────────┬──────────────┘   │
 │                  │                                  │                  │
-│   ┌──────────────┴──────────────┐     ┌─────────────▼──────────────┐   │
-│   │    VideoToolboxDecoder      │     │    ScrcpyControlMessage    │   │
-│   │ (AVSampleBufferDisplayLayer)│     │(Touch, Keys, Text, Clipbd) │   │
-│   └──────────────┬──────────────┘     └─────────────┬──────────────┘   │
-│                  │                                  │                  │
-│   ┌──────────────▼──────────────────────────────────▼──────────────┐   │
+│   ┌──────────────┼──────────────────────────────────┤                  │
+│   │              │                                  │                  │
+│   ▼              ▼                                  ▼                  │
+│ ┌──────────────┐ ┌──────────────┐     ┌────────────────────────────┐   │
+│ │ VideoDecoder │ │ PcmAudioPlay │     │    ScrcpyControlMessage    │   │
+│ │(VideoToolbox)│ │(AVAudioEngine│     │(Touch, Keys, Text, Clipbd) │   │
+│ └──────┬───────┘ └──────┬───────┘     └─────────────┬──────────────┘   │
+│        │                │                           │                  │
+│   ┌────▼────────────────▼───────────────────────────▼──────────────┐   │
 │   │                         AdbConnection                          │   │
 │   │  (Pure Swift ADB: Handshake, RSA Auth, SYNC push, Multiplex)   │   │
 │   └──────────────────────────────┬─────────────────────────────────┘   │
@@ -60,58 +73,58 @@ Unlike older ports (such as `wsvn53/scrcpy-ios`) that compile desktop C code, SD
 
 ## Features
 
-- ⚡ **Near-Zero Latency**: Direct hardware decoding into `AVSampleBufferDisplayLayer` via Apple Silicon Media Engine.
-- 📷 **Direct Android Camera Streaming (`--video-source=camera`)**:
-  - Stream directly from Android's **Back**, **Front**, or **External USB** camera lenses without displaying the screen.
-  - Interactive camera controls: **Flashlight/Torch toggle**, **Zoom In/Out**, and microphone audio forwarding.
-  - Support for high-speed camera capture (`camera_high_speed=true`).
-- 📶 **Autonomous Wi-Fi Connection**: iPhone connects directly to Android over Wi-Fi. It authenticates with RSA, automatically uploads `scrcpy-server.jar`, and launches screen mirroring—no computer required!
-- 👆 **Native iOS Touch & Gestures**: Smooth swipe, drag, tap, and multi-finger gestures mapped with sub-pixel precision to Android screen coordinates.
-- 🎮 **On-Screen Android Navigation Bar**:
-  - ◀ **Back** (Android `AKEYCODE_BACK`)
-  - ⌂ **Home** (Android `AKEYCODE_HOME`)
-  - ▢ **Recents / App Switcher** (Android `AKEYCODE_APP_SWITCH`)
-  - ⚡ **Power** (Screen On / Off / Sleep)
-  - 🔊 **Volume Up / Down**
-  - 🔄 **Rotate Screen**
-  - ⌨ **Direct Text Injection**: Type using iOS keyboard directly into any focused Android text field.
-  - 📋 **Bidirectional Clipboard Sync**: Seamless copy-paste between iOS and Android.
-- ⚙ **Configurable Streaming & Flags**:
-  - Codecs: **H.264** or **H.265 (HEVC)**
-  - Resolutions: Native, 1080p, 720p, 800p
-  - Bitrate: 2 Mbps to 20 Mbps
-  - Framerate: 30 FPS, 60 FPS, 120 FPS (iPad Pro / iPhone ProMotion)
-  - Audio Forwarding toggle (Android 11+)
-  - **Arbitrary Custom Server Flags**: Pass any option such as `crop=1080:1080:0:0`, `angle=90`, or `stay_awake=true`.
-- 📊 **Real-Time HUD**: Live FPS counter, active resolution, and connection state.
+- **Hardware Decoding**: Hardware H.264 and H.265 (HEVC) decoding using `VTDecompressionSession`.
+- **Audio Forwarding**: Pure-Swift low-latency PCM audio playback (48kHz stereo) via `AVAudioEngine` and `AVAudioSourceNode` for both system audio (Android 11+) and camera microphone streams.
+- **Customizable Video Parameters**:
+  - Max Resolution: Native, 1080p, 720p, 800p
+  - Bitrate: 2 Mbps up to 20 Mbps
+  - Framerate: 30 FPS, 60 FPS, 120 FPS (iPhone & iPad ProMotion)
+  - Video Codecs: H.264 or H.265 (HEVC)
+- **Arbitrary Server Flags**: Support for custom scrcpy-server arguments like `crop=1080:1080:0:0`, `angle=90`, or `stay_awake=true`.
+- **HUD Diagnostics**: Live framerate (FPS) counter, stream resolution, and connection status overlay.
 
 ---
 
 ## Quick Start: Connecting to an Android Device
 
-### 1. Prepare your Android Device
-1. Open **Settings** > **About Phone** and tap **Build Number** 7 times to enable **Developer Options**.
-2. Go to **Settings** > **Developer Options**:
-   - Turn ON **USB Debugging**.
-   - If available (Android 11+), turn ON **Wireless Debugging**.
-3. If connecting via standard TCP/IP port 5555, enable it once using a computer or Termux:
+### Option A: Standard Wi-Fi Connection (Port 5555)
+1. On your Android device, enable **Developer Options** (tap *Build Number* 7 times in *Settings > About Phone*).
+2. Go to **Settings > Developer Options** and enable **USB Debugging** (and **Wireless Debugging** if available).
+3. If connecting for the first time via standard port 5555, enable TCP mode once:
    ```bash
    adb tcpip 5555
    ```
-4. Note your Android device's local IP address (e.g., `192.168.1.150` in **Settings > Wi-Fi**).
+4. Note your Android device's local IP address (in **Settings > Wi-Fi**).
+5. Open **Scrcpy** on your iPhone/iPad, enter the IP, and tap **Connect & Mirror**.
+6. On Android, tap **Allow** on the prompt (*"Allow USB debugging from this computer?"*).
 
-### 2. Connect from iOS
-1. Open **Scrcpy iOS** on your iPhone or iPad.
-2. Enter the Android device's IP address (port `5555`).
-3. Tap **Connect & Mirror**.
-4. On your Android device, accept the prompt:
-   > *"Allow USB debugging? The computer's RSA key fingerprint is..."*
-   > Check *"Always allow from this computer"* and tap **Allow**.
-5. The Android screen appears immediately with butter-smooth live mirroring!
+### Option B: Android 11+ Wireless Pairing (No PC Required)
+1. On Android, open **Settings > Developer Options > Wireless Debugging**.
+2. Tap **Pair device with pairing code**. A popup will show an IP address, pairing port, and 6-digit code.
+3. Open **Scrcpy** on iOS, switch to the **ADB Pair** tab, and enter the details.
+4. Tap **Pair with Android**. Once paired, return to the **Screen** or **Camera** tab and connect!
 
 ---
 
-## Running and Building the Code
+## Building and Running
+
+### Requirements
+- macOS with Xcode 15+ installed
+- iOS 16.0+ deployment target
+
+### Open in Xcode
+1. Open the project in Xcode:
+   ```bash
+   open ScrcpyiOS.xcodeproj
+   ```
+   *(If you modify `project.yml`, regenerate the project using `xcodegen generate`)*.
+2. Select the **ScrcpyApp** scheme and your target (iPhone, iPad, or iOS Simulator).
+3. Press **Run** (`⌘R`).
+
+### Sideloading (IPA)
+A pre-packaged IPA is available in the `build/` directory:
+- `build/Scrcpy.ipa`
+Can be installed on real iOS devices using tools like TrollStore, AltStore, Sideloadly, or Apple Configurator.
 
 ### Run Automated Tests
 ```bash
@@ -119,50 +132,28 @@ swift run ScrcpyTests
 ```
 Verifies ADB framing, RSA key generation, Android public key structuring, scrcpy protocol packets, touch coordinate serialization, and NALU conversions.
 
-### Open in Xcode
-You can open the project directly in Xcode:
-```bash
-open Package.swift
-```
-Select the **ScrcpyApp** scheme, pick your connected iPhone, iPad, or iOS Simulator, and press **Run** (`⌘R`).
-
 ---
 
 ## Project Structure
 
 ```
-├── Package.swift                             # SwiftPM configuration
+├── project.yml                               # XcodeGen specification
+├── ScrcpyiOS.xcodeproj                       # Native Xcode project
+├── Package.swift                             # SwiftPM package configuration
 ├── Sources/
 │   ├── ScrcpyKit/                            # Reusable Core Framework
-│   │   ├── Adb/
-│   │   │   ├── AdbMessage.swift              # ADB wire protocol packets
-│   │   │   ├── AdbCrypto.swift               # RSA-2048 & Android key formatting
-│   │   │   ├── AdbConnection.swift           # TCP transport via Network.framework
-│   │   │   ├── AdbStream.swift               # Multiplexed channel stream
-│   │   │   └── AdbSyncService.swift          # File push protocol (sync:)
-│   │   ├── Protocol/
-│   │   │   ├── ScrcpyProtocol.swift          # Codecs, headers, session meta
-│   │   │   ├── ScrcpyControlMessage.swift    # Touch, keycode, text, scroll
-│   │   │   ├── ScrcpyDeviceMessage.swift     # Clipboard sync from device
-│   │   │   └── Data+Binary.swift             # Safe endian binary serialization
-│   │   ├── Video/
-│   │   │   ├── NaluParser.swift              # Annex-B parser & AVCC conversion
-│   │   │   ├── VideoToolboxDecoder.swift     # Apple hardware decoder
-│   │   │   └── ScrcpyVideoView.swift         # AVSampleBufferDisplayLayer view
-│   │   └── Session/
-│   │       ├── ScrcpyClient.swift            # High-level session coordinator
-│   │       └── GestureController.swift       # iOS multi-touch event overlay
+│   │   ├── Adb/                              # Pure Swift ADB Client & Crypto
+│   │   ├── Audio/                            # Low-latency PCM audio engine
+│   │   ├── Protocol/                         # Scrcpy protocol packets & control messages
+│   │   ├── Video/                            # Apple VideoToolbox hardware decoder
+│   │   └── Session/                          # Session coordination & touch gestures
 │   ├── ScrcpyApp/                            # iOS Application Target
-│   │   ├── ScrcpyApp.swift                   # SwiftUI app entry point
-│   │   ├── Views/
-│   │   │   ├── DeviceDiscoveryView.swift     # Connection dashboard & settings
-│   │   │   └── MirrorSessionView.swift       # Fullscreen mirror with controls
-│   │   └── Resources/
-│   │       ├── scrcpy-server                 # Bundled official scrcpy-server binary
-│   │       └── Info.plist                    # iOS permissions & Bonjour configuration
+│   │   ├── ScrcpyApp.swift                   # SwiftUI App entry point
+│   │   ├── Models/                           # Device profile persistence
+│   │   ├── Views/                            # Discovery, Camera, Pairing & Mirroring views
+│   │   └── Resources/                        # Bundled scrcpy-server & AppIcon assets
 │   └── ScrcpyTests/                          # Verification Test Runner
-│       └── main.swift                        # Automated test suite
-└── Tests/ScrcpyKitTests/                     # XCTest unit test suites
+└── docs/screenshots/                         # App screenshots for documentation
 ```
 
 ---
