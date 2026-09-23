@@ -427,9 +427,22 @@ public struct DeviceDiscoveryView: View {
                     Image(systemName: "number")
                         .foregroundColor(.blue)
                         .frame(width: 20)
-                    TextField("5555", value: $profileManager.activeProfile.port, format: .number)
-                        .textFieldStyle(.plain)
-                        .foregroundColor(.white)
+                    TextField("5555", text: Binding(
+                        get: { profileManager.activeProfile.port == 0 ? "" : String(profileManager.activeProfile.port) },
+                        set: {
+                            let digits = $0.filter { $0.isNumber }
+                            if let val = UInt16(digits) {
+                                profileManager.activeProfile.port = val
+                            } else if digits.isEmpty {
+                                profileManager.activeProfile.port = 0
+                            }
+                        }
+                    ))
+                    .textFieldStyle(.plain)
+                    .foregroundColor(.white)
+                    #if os(iOS)
+                    .keyboardType(.numberPad)
+                    #endif
                 }
                 .padding(10)
                 .background(Color(white: 0.14))
