@@ -51,4 +51,28 @@ public struct ConnectionProfile: Identifiable, Codable, Equatable, Hashable, Sen
         self.customServerArgs = customServerArgs
         self.lastConnected = lastConnected
     }
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, host, port, videoSource, cameraFacing, resolution, bitrateMbps, fps, codec
+        case audioEnabled, stayAwake, showTouches, customServerArgs, lastConnected
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
+        self.name = try container.decodeIfPresent(String.self, forKey: .name) ?? "Android Device"
+        self.host = try container.decodeIfPresent(String.self, forKey: .host) ?? "10.0.0.30"
+        self.port = try container.decodeIfPresent(UInt16.self, forKey: .port) ?? 5555
+        self.videoSource = try container.decodeIfPresent(ScrcpyVideoSource.self, forKey: .videoSource) ?? .display
+        self.cameraFacing = try container.decodeIfPresent(ScrcpyCameraFacing.self, forKey: .cameraFacing) ?? .back
+        self.resolution = try container.decodeIfPresent(Int.self, forKey: .resolution) ?? 1920
+        self.bitrateMbps = try container.decodeIfPresent(Double.self, forKey: .bitrateMbps) ?? 8.0
+        self.fps = try container.decodeIfPresent(Int.self, forKey: .fps) ?? 60
+        self.codec = try container.decodeIfPresent(ScrcpyVideoCodec.self, forKey: .codec) ?? .h264
+        self.audioEnabled = try container.decodeIfPresent(Bool.self, forKey: .audioEnabled) ?? true
+        self.stayAwake = try container.decodeIfPresent(Bool.self, forKey: .stayAwake) ?? true
+        self.showTouches = try container.decodeIfPresent(Bool.self, forKey: .showTouches) ?? false
+        self.customServerArgs = try container.decodeIfPresent(String.self, forKey: .customServerArgs) ?? ""
+        self.lastConnected = try container.decodeIfPresent(Date.self, forKey: .lastConnected)
+    }
 }

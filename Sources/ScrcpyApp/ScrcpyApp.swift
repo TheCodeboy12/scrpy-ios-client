@@ -24,11 +24,14 @@ public struct RootContentView: View {
     }
 
     public var body: some View {
-        Group {
+        ZStack {
+            DeviceDiscoveryView(client: client)
+                .opacity(client.state == .mirroring ? 0 : 1)
+                .allowsHitTesting(client.state != .mirroring)
+
             if client.state == .mirroring {
                 MirrorSessionView(client: client)
-            } else {
-                DeviceDiscoveryView(client: client)
+                    .transition(.opacity)
             }
         }
         #if canImport(UIKit)
