@@ -1,0 +1,44 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:scrpy-ios-client}",
+            "name": "Debug ScrcpyApp",
+            "target": "ScrcpyApp",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug ScrcpyApp"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:scrpy-ios-client}",
+            "name": "Release ScrcpyApp",
+            "target": "ScrcpyApp",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release ScrcpyApp"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:scrpy-ios-client}",
+            "name": "Debug ScrcpyTests",
+            "target": "ScrcpyTests",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug ScrcpyTests"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:scrpy-ios-client}",
+            "name": "Release ScrcpyTests",
+            "target": "ScrcpyTests",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release ScrcpyTests"
+        }
+    ]
+}

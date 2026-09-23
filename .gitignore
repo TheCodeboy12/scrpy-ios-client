@@ -1,0 +1,19 @@
+# Xcode & DerivedData
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcscmblueprint
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Local build artifacts
+build/Payload/
+Scrcpy.app/
+main
+
+# macOS
+.DS_Store
+*.swp
+*~

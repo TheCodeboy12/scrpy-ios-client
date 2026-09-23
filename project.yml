@@ -1,0 +1,64 @@
+name: ScrcpyiOS
+options:
+  bundleIdPrefix: com.scrcpy.ios
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  ScrcpyKit:
+    type: framework
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/ScrcpyKit
+    resources:
+      - path: Sources/ScrcpyKit/Resources
+    settings:
+      base:
+        PRODUCT_NAME: ScrcpyKit
+        PRODUCT_BUNDLE_IDENTIFIER: com.scrcpy.ios.kit
+        GENERATE_INFOPLIST_FILE: YES
+        ENABLE_BITCODE: NO
+        SKIP_INSTALL: YES
+        SWIFT_VERSION: "5.0"
+        DEFINES_MODULE: YES
+
+  ScrcpyApp:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/ScrcpyApp
+        excludes:
+          - Info.plist
+    resources:
+      - path: Sources/ScrcpyApp/Resources
+    dependencies:
+      - target: ScrcpyKit
+        embed: true
+    info:
+      path: Sources/ScrcpyApp/Info.plist
+      properties:
+        NSLocalNetworkUsageDescription: "Scrcpy needs access to your local Wi-Fi network to connect to and mirror your Android device."
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+    settings:
+      base:
+        PRODUCT_NAME: ScrcpyApp
+        PRODUCT_BUNDLE_IDENTIFIER: com.scrcpy.ios.app
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Sources/ScrcpyApp/Info.plist
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+        CODE_SIGN_IDENTITY: ""
+        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGNING_ALLOWED: NO

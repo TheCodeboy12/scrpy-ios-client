@@ -1,0 +1,603 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		14A3D63969235D3F89BFAD58 /* ScrcpyKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E46E9F589B2EECFBF1D75222 /* ScrcpyKit.framework */; };
+		309469F8E1B56F70AC89A634 /* DeviceDiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D2B5A6616DD261C2599D09 /* DeviceDiscoveryView.swift */; };
+		3DEA27349DDF45303E5928FB /* Data+Binary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26DAC775207AD3C55442F91 /* Data+Binary.swift */; };
+		47ED1ECF7487FF9AA02D4390 /* AdbPairService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661D32CB951F8E303A3B2DEE /* AdbPairService.swift */; };
+		5030EE7DDAE466FE7B258DB3 /* scrcpy-server.jar in Resources */ = {isa = PBXBuildFile; fileRef = AF6160161D4E79771911FBDE /* scrcpy-server.jar */; };
+		52265AC84DB025335C121B41 /* AdbMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA3F566E22C450B2F03EBB4 /* AdbMessage.swift */; };
+		576DF363A555846EAB17DEDD /* AdbStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FC3F9AF3EC9579F27E9F1A /* AdbStream.swift */; };
+		5B216A7BC8725E7B43F8E049 /* ScrcpyKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E46E9F589B2EECFBF1D75222 /* ScrcpyKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5D93C86DAC37602340DD55DD /* scrcpy-server.jar in Resources */ = {isa = PBXBuildFile; fileRef = 8E6C177C605DE22326A835A0 /* scrcpy-server.jar */; };
+		5FB54020167209612A7E0566 /* NaluParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19234E8311B76C7656FA11F2 /* NaluParser.swift */; };
+		7178FCC85D0878C48F691C6E /* ScrcpyDeviceMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1312DB527D9AEF46EDCFED2C /* ScrcpyDeviceMessage.swift */; };
+		8B62DEC3D81A5E6B8A99C68E /* MirrorSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4C1330C4C6B0C1F6EF4D32 /* MirrorSessionView.swift */; };
+		AA067D17A7C5587158E1DF6F /* AdbConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8731DAA9D092F0684938AFE6 /* AdbConnection.swift */; };
+		B1DAEF532C281FBC71009476 /* VideoToolboxDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD50D7482F2B713C25B68D9 /* VideoToolboxDecoder.swift */; };
+		B1F01390CE3FDE28A319DADA /* scrcpy-server-v4.1 in Resources */ = {isa = PBXBuildFile; fileRef = D5A7FBF59F3573602E115647 /* scrcpy-server-v4.1 */; };
+		B21914CBDB75BD79806B9E57 /* ScrcpyClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E56D51BCF1C701C7CF32AE /* ScrcpyClient.swift */; };
+		B5C561A08463392D6C2D9581 /* ScrcpyControlMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B51CC38D456EB0FD6A56E5 /* ScrcpyControlMessage.swift */; };
+		D14A77F9AF8B48FAA52EE20A /* ScrcpyProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76546B7AF51A92846003C6A /* ScrcpyProtocol.swift */; };
+		D49B5A184152842C434AFC05 /* ScrcpyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD05055BDC561C4DA67945AE /* ScrcpyApp.swift */; };
+		D934A94B055568E50E58BAD9 /* AdbCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E86C726647F4D51EE9CC44D /* AdbCrypto.swift */; };
+		E0C56A04A3112A8357397F7A /* ScrcpyVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D225972BBD5EA5404B65878 /* ScrcpyVideoView.swift */; };
+		E53B897CB48739B0298C1996 /* GestureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6861E1B020D5C9BB897F763 /* GestureController.swift */; };
+		EFF80D6ED996DA43683CA0A2 /* AdbSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263E9A2E3FB170988357A050 /* AdbSyncService.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FA7A58CA8A2D53B09D274171 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9685A42C749673D66C5D9C09 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4CBD420041FD8BF2BAEF296B;
+			remoteInfo = ScrcpyKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7289E17EAD566AB3A7124409 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				5B216A7BC8725E7B43F8E049 /* ScrcpyKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1312DB527D9AEF46EDCFED2C /* ScrcpyDeviceMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrcpyDeviceMessage.swift; sourceTree = "<group>"; };
+		19234E8311B76C7656FA11F2 /* NaluParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaluParser.swift; sourceTree = "<group>"; };
+		263E9A2E3FB170988357A050 /* AdbSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbSyncService.swift; sourceTree = "<group>"; };
+		3EA3F566E22C450B2F03EBB4 /* AdbMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbMessage.swift; sourceTree = "<group>"; };
+		50FC3F9AF3EC9579F27E9F1A /* AdbStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbStream.swift; sourceTree = "<group>"; };
+		661D32CB951F8E303A3B2DEE /* AdbPairService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbPairService.swift; sourceTree = "<group>"; };
+		6D225972BBD5EA5404B65878 /* ScrcpyVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrcpyVideoView.swift; sourceTree = "<group>"; };
+		75B51CC38D456EB0FD6A56E5 /* ScrcpyControlMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrcpyControlMessage.swift; sourceTree = "<group>"; };
+		7B4C1330C4C6B0C1F6EF4D32 /* MirrorSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorSessionView.swift; sourceTree = "<group>"; };
+		86C69CD32AA5246BF78C02C5 /* scrcpy-server */ = {isa = PBXFileReference; path = "scrcpy-server"; sourceTree = "<group>"; };
+		8731DAA9D092F0684938AFE6 /* AdbConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbConnection.swift; sourceTree = "<group>"; };
+		8E6C177C605DE22326A835A0 /* scrcpy-server.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = "scrcpy-server.jar"; sourceTree = "<group>"; };
+		8E86C726647F4D51EE9CC44D /* AdbCrypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbCrypto.swift; sourceTree = "<group>"; };
+		944EF914E4C3B3CCE0ED4C47 /* scrcpy-server */ = {isa = PBXFileReference; path = "scrcpy-server"; sourceTree = "<group>"; };
+		9E379745E1AD347EED1D6C89 /* ScrcpyApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ScrcpyApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AF6160161D4E79771911FBDE /* scrcpy-server.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = "scrcpy-server.jar"; sourceTree = "<group>"; };
+		AFD50D7482F2B713C25B68D9 /* VideoToolboxDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoToolboxDecoder.swift; sourceTree = "<group>"; };
+		BD05055BDC561C4DA67945AE /* ScrcpyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrcpyApp.swift; sourceTree = "<group>"; };
+		C2E56D51BCF1C701C7CF32AE /* ScrcpyClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrcpyClient.swift; sourceTree = "<group>"; };
+		D5A7FBF59F3573602E115647 /* scrcpy-server-v4.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = "scrcpy-server-v4.1"; sourceTree = "<group>"; };
+		D6861E1B020D5C9BB897F763 /* GestureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureController.swift; sourceTree = "<group>"; };
+		D76546B7AF51A92846003C6A /* ScrcpyProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrcpyProtocol.swift; sourceTree = "<group>"; };
+		D7D2B5A6616DD261C2599D09 /* DeviceDiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDiscoveryView.swift; sourceTree = "<group>"; };
+		E26DAC775207AD3C55442F91 /* Data+Binary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Binary.swift"; sourceTree = "<group>"; };
+		E46E9F589B2EECFBF1D75222 /* ScrcpyKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ScrcpyKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1EB2BABAD31E6129D9351482 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14A3D63969235D3F89BFAD58 /* ScrcpyKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0F72F14F31188F1E3BC87C6D /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				D6861E1B020D5C9BB897F763 /* GestureController.swift */,
+				C2E56D51BCF1C701C7CF32AE /* ScrcpyClient.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+		1356736D48FAF0597E7E3D25 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9E379745E1AD347EED1D6C89 /* ScrcpyApp.app */,
+				E46E9F589B2EECFBF1D75222 /* ScrcpyKit.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		196CCD8298E8024225E6EACF /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				19234E8311B76C7656FA11F2 /* NaluParser.swift */,
+				6D225972BBD5EA5404B65878 /* ScrcpyVideoView.swift */,
+				AFD50D7482F2B713C25B68D9 /* VideoToolboxDecoder.swift */,
+			);
+			path = Video;
+			sourceTree = "<group>";
+		};
+		4BACE2DADA77CC0AC1CB4BDF /* Adb */ = {
+			isa = PBXGroup;
+			children = (
+				8731DAA9D092F0684938AFE6 /* AdbConnection.swift */,
+				8E86C726647F4D51EE9CC44D /* AdbCrypto.swift */,
+				3EA3F566E22C450B2F03EBB4 /* AdbMessage.swift */,
+				661D32CB951F8E303A3B2DEE /* AdbPairService.swift */,
+				50FC3F9AF3EC9579F27E9F1A /* AdbStream.swift */,
+				263E9A2E3FB170988357A050 /* AdbSyncService.swift */,
+			);
+			path = Adb;
+			sourceTree = "<group>";
+		};
+		4BFCD9B8EC74D10C067587AC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				86C69CD32AA5246BF78C02C5 /* scrcpy-server */,
+				D5A7FBF59F3573602E115647 /* scrcpy-server-v4.1 */,
+				8E6C177C605DE22326A835A0 /* scrcpy-server.jar */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		5BA522A23585A610849E7526 = {
+			isa = PBXGroup;
+			children = (
+				B25F0996E135739DE10A8A4B /* ScrcpyApp */,
+				A48497DCAB3564ECB1B7AE82 /* ScrcpyKit */,
+				1356736D48FAF0597E7E3D25 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A48497DCAB3564ECB1B7AE82 /* ScrcpyKit */ = {
+			isa = PBXGroup;
+			children = (
+				4BACE2DADA77CC0AC1CB4BDF /* Adb */,
+				EA4893B127F9B3575A36590B /* Protocol */,
+				FAE111223A19FEE1E0BEA871 /* Resources */,
+				0F72F14F31188F1E3BC87C6D /* Session */,
+				196CCD8298E8024225E6EACF /* Video */,
+			);
+			name = ScrcpyKit;
+			path = Sources/ScrcpyKit;
+			sourceTree = "<group>";
+		};
+		B25F0996E135739DE10A8A4B /* ScrcpyApp */ = {
+			isa = PBXGroup;
+			children = (
+				BD05055BDC561C4DA67945AE /* ScrcpyApp.swift */,
+				4BFCD9B8EC74D10C067587AC /* Resources */,
+				D3FD49EF6719570C5BFC78EC /* Views */,
+			);
+			name = ScrcpyApp;
+			path = Sources/ScrcpyApp;
+			sourceTree = "<group>";
+		};
+		D3FD49EF6719570C5BFC78EC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D7D2B5A6616DD261C2599D09 /* DeviceDiscoveryView.swift */,
+				7B4C1330C4C6B0C1F6EF4D32 /* MirrorSessionView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		EA4893B127F9B3575A36590B /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				E26DAC775207AD3C55442F91 /* Data+Binary.swift */,
+				75B51CC38D456EB0FD6A56E5 /* ScrcpyControlMessage.swift */,
+				1312DB527D9AEF46EDCFED2C /* ScrcpyDeviceMessage.swift */,
+				D76546B7AF51A92846003C6A /* ScrcpyProtocol.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		FAE111223A19FEE1E0BEA871 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				944EF914E4C3B3CCE0ED4C47 /* scrcpy-server */,
+				AF6160161D4E79771911FBDE /* scrcpy-server.jar */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		34B616F275AA967C49DEB14A /* ScrcpyApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD7A0F19D4911401E055D0E6 /* Build configuration list for PBXNativeTarget "ScrcpyApp" */;
+			buildPhases = (
+				E9E2FE97B93A6D08B6445899 /* Sources */,
+				F4874C23DE544675C15A2B75 /* Resources */,
+				1EB2BABAD31E6129D9351482 /* Frameworks */,
+				7289E17EAD566AB3A7124409 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C937EA43028029FB8A1EE71B /* PBXTargetDependency */,
+			);
+			name = ScrcpyApp;
+			packageProductDependencies = (
+			);
+			productName = ScrcpyApp;
+			productReference = 9E379745E1AD347EED1D6C89 /* ScrcpyApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4CBD420041FD8BF2BAEF296B /* ScrcpyKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5546F14C48CDEFA0A4BBDBF7 /* Build configuration list for PBXNativeTarget "ScrcpyKit" */;
+			buildPhases = (
+				04D24C13F14608A9D070DA90 /* Sources */,
+				07920082122A641D76F8E082 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ScrcpyKit;
+			packageProductDependencies = (
+			);
+			productName = ScrcpyKit;
+			productReference = E46E9F589B2EECFBF1D75222 /* ScrcpyKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9685A42C749673D66C5D9C09 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 1D07159DA1CF6CDAC4611C7F /* Build configuration list for PBXProject "ScrcpyiOS" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 5BA522A23585A610849E7526;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 1356736D48FAF0597E7E3D25 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4CBD420041FD8BF2BAEF296B /* ScrcpyKit */,
+				34B616F275AA967C49DEB14A /* ScrcpyApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		07920082122A641D76F8E082 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5030EE7DDAE466FE7B258DB3 /* scrcpy-server.jar in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F4874C23DE544675C15A2B75 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B1F01390CE3FDE28A319DADA /* scrcpy-server-v4.1 in Resources */,
+				5D93C86DAC37602340DD55DD /* scrcpy-server.jar in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		04D24C13F14608A9D070DA90 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA067D17A7C5587158E1DF6F /* AdbConnection.swift in Sources */,
+				D934A94B055568E50E58BAD9 /* AdbCrypto.swift in Sources */,
+				52265AC84DB025335C121B41 /* AdbMessage.swift in Sources */,
+				47ED1ECF7487FF9AA02D4390 /* AdbPairService.swift in Sources */,
+				576DF363A555846EAB17DEDD /* AdbStream.swift in Sources */,
+				EFF80D6ED996DA43683CA0A2 /* AdbSyncService.swift in Sources */,
+				3DEA27349DDF45303E5928FB /* Data+Binary.swift in Sources */,
+				E53B897CB48739B0298C1996 /* GestureController.swift in Sources */,
+				5FB54020167209612A7E0566 /* NaluParser.swift in Sources */,
+				B21914CBDB75BD79806B9E57 /* ScrcpyClient.swift in Sources */,
+				B5C561A08463392D6C2D9581 /* ScrcpyControlMessage.swift in Sources */,
+				7178FCC85D0878C48F691C6E /* ScrcpyDeviceMessage.swift in Sources */,
+				D14A77F9AF8B48FAA52EE20A /* ScrcpyProtocol.swift in Sources */,
+				E0C56A04A3112A8357397F7A /* ScrcpyVideoView.swift in Sources */,
+				B1DAEF532C281FBC71009476 /* VideoToolboxDecoder.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9E2FE97B93A6D08B6445899 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				309469F8E1B56F70AC89A634 /* DeviceDiscoveryView.swift in Sources */,
+				8B62DEC3D81A5E6B8A99C68E /* MirrorSessionView.swift in Sources */,
+				D49B5A184152842C434AFC05 /* ScrcpyApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C937EA43028029FB8A1EE71B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4CBD420041FD8BF2BAEF296B /* ScrcpyKit */;
+			targetProxy = FA7A58CA8A2D53B09D274171 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0904ADC8CA63CDC44AB09493 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/ScrcpyApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scrcpy.ios.app;
+				PRODUCT_NAME = ScrcpyApp;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		1C9408322D43046D9B9B26A9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		4CD08EF100C91DDD7B1FD567 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.scrcpy.ios.kit;
+				PRODUCT_NAME = ScrcpyKit;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		69E9AC2790E4BA6CA48A473C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/ScrcpyApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scrcpy.ios.app;
+				PRODUCT_NAME = ScrcpyApp;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A9F9E3AD7C61343414AEAF5D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.scrcpy.ios.kit;
+				PRODUCT_NAME = ScrcpyKit;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		DA02FF2D3654297281C68028 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D07159DA1CF6CDAC4611C7F /* Build configuration list for PBXProject "ScrcpyiOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA02FF2D3654297281C68028 /* Debug */,
+				1C9408322D43046D9B9B26A9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5546F14C48CDEFA0A4BBDBF7 /* Build configuration list for PBXNativeTarget "ScrcpyKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9F9E3AD7C61343414AEAF5D /* Debug */,
+				4CD08EF100C91DDD7B1FD567 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DD7A0F19D4911401E055D0E6 /* Build configuration list for PBXNativeTarget "ScrcpyApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				69E9AC2790E4BA6CA48A473C /* Debug */,
+				0904ADC8CA63CDC44AB09493 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9685A42C749673D66C5D9C09 /* Project object */;
+}
