@@ -1,6 +1,6 @@
 import Foundation
 
-public enum ScrcpyVideoCodec: UInt32, Sendable {
+public enum ScrcpyVideoCodec: UInt32, Sendable, Codable, CaseIterable {
     case h264 = 0x68323634 // "h264"
     case h265 = 0x68323635 // "h265"
     case av1  = 0x00617631 // "av1"
@@ -18,7 +18,7 @@ public enum ScrcpyVideoCodec: UInt32, Sendable {
     }
 }
 
-public enum ScrcpyAudioCodec: UInt32, Sendable {
+public enum ScrcpyAudioCodec: UInt32, Sendable, Codable, CaseIterable {
     case opus = 0x6F707573 // "opus"
     case aac  = 0x00616163 // "aac"
     case flac = 0x666C6163 // "flac"

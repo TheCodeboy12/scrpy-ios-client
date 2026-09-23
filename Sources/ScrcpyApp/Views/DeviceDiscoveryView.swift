@@ -6,14 +6,13 @@ public enum DiscoveryTab: String, CaseIterable {
     case mirror = "Screen"
     case camera = "Camera"
     case pair = "ADB Pair"
-    case help = "Help"
+    case help = "Guide"
 }
 
 @MainActor
 public final class DeviceDiscoveryViewModel: ObservableObject {
     @Published public var currentTab: DiscoveryTab = .mirror
-    @Published public var hostInput: String = "10.0.0.30"
-    @Published public var portInput: String = "5555"
+    @ObservedObject public var profileManager = ProfileManager.shared
 
     // Pairing fields (Android 11+)
     @Published public var pairingPortInput: String = ""
@@ -22,17 +21,13 @@ public final class DeviceDiscoveryViewModel: ObservableObject {
     @Published public var pairStatusMessage: String?
     @Published public var pairSuccess: Bool = false
 
-    // Stream settings
-    @Published public var selectedCameraFacing: ScrcpyCameraFacing = .back
-    @Published public var selectedResolution: Int = 1920
-    @Published public var selectedBitrateMbps: Double = 8.0
-    @Published public var selectedFps: Int = 60
-    @Published public var selectedCodec: ScrcpyVideoCodec = .h264
-    @Published public var audioEnabled: Bool = false
-    @Published public var stayAwake: Bool = true
-    @Published public var showTouches: Bool = false
-    @Published public var customServerArgs: String = ""
+    // Modals
     @Published public var showAdvanced: Bool = false
+    @Published public var isRenamingDevice: Bool = false
+    @Published public var renamingDeviceName: String = ""
+    @Published public var isAddingDevice: Bool = false
+    @Published public var newDeviceName: String = ""
+    @Published public var newDeviceHost: String = ""
 
     public let client: ScrcpyClient
     private var cancellables = Set<AnyCancellable>()
@@ -42,29 +37,50 @@ public final class DeviceDiscoveryViewModel: ObservableObject {
         client.objectWillChange
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.objectWillChange.send()
+                if case .mirroring = self.client.state {
+                    self.profileManager.recordSuccessfulConnection(
+                        host: self.client.host,
+                        port: self.client.port,
+                        deviceName: self.client.deviceName
+                    )
+                }
+            }
+            .store(in: &cancellables)
+
+        profileManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
                 self?.objectWillChange.send()
             }
             .store(in: &cancellables)
     }
 
     public func connectDevice() {
-        client.host = hostInput.trimmingCharacters(in: .whitespacesAndNewlines)
-        client.port = UInt16(portInput) ?? 5555
+        let profile = profileManager.activeProfile
+        client.host = profile.host.trimmingCharacters(in: .whitespacesAndNewlines)
+        client.port = profile.port
         client.videoSource = (currentTab == .camera) ? .camera : .display
-        client.cameraFacing = selectedCameraFacing
-        client.videoCodec = selectedCodec
-        client.maxSize = selectedResolution
-        client.bitRate = Int(selectedBitrateMbps * 1_000_000)
-        client.maxFps = selectedFps
-        client.audioEnabled = audioEnabled
-        client.stayAwake = stayAwake
-        client.showTouches = showTouches
-        client.customServerArgs = customServerArgs
+        client.cameraFacing = profile.cameraFacing
+        client.videoCodec = profile.codec
+        client.maxSize = profile.resolution
+        client.bitRate = Int(profile.bitrateMbps * 1_000_000)
+        client.maxFps = profile.fps
+        client.audioEnabled = profile.audioEnabled
+        client.stayAwake = profile.stayAwake
+        client.showTouches = profile.showTouches
+        client.customServerArgs = profile.customServerArgs
         client.start()
     }
 
+    public func quickConnect(to profile: ConnectionProfile) {
+        profileManager.selectProfile(profile)
+        connectDevice()
+    }
+
     public func pairDevice() {
-        var host = hostInput.trimmingCharacters(in: .whitespacesAndNewlines)
+        var host = profileManager.activeProfile.host.trimmingCharacters(in: .whitespacesAndNewlines)
         if host.contains(":") {
             let parts = host.split(separator: ":")
             if parts.count == 2 {
@@ -72,7 +88,7 @@ public final class DeviceDiscoveryViewModel: ObservableObject {
                 if pairingPortInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     pairingPortInput = String(parts[1])
                 }
-                hostInput = host
+                profileManager.activeProfile.host = host
             }
         }
 
@@ -142,6 +158,7 @@ public struct DeviceDiscoveryView: View {
                 // Tab Content
                 switch vm.currentTab {
                 case .mirror, .camera:
+                    savedDevicesSection
                     connectionCard
                     qualityCard
                     advancedCard
@@ -156,6 +173,25 @@ public struct DeviceDiscoveryView: View {
         }
         .frame(minWidth: 460)
         .background(Color(white: 0.08).ignoresSafeArea())
+        .alert("Rename Device Profile", isPresented: $vm.isRenamingDevice) {
+            TextField("Device Name", text: $vm.renamingDeviceName)
+            Button("Save") {
+                vm.profileManager.renameProfile(id: vm.profileManager.activeProfile.id, newName: vm.renamingDeviceName)
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Enter a recognizable name for this Android device.")
+        }
+        .alert("Add Android Device", isPresented: $vm.isAddingDevice) {
+            TextField("Name (e.g. Living Room TV)", text: $vm.newDeviceName)
+            TextField("IP Address (e.g. 192.168.1.150)", text: $vm.newDeviceHost)
+            Button("Add Device") {
+                _ = vm.profileManager.createNewProfile(name: vm.newDeviceName, host: vm.newDeviceHost)
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Add a new Android device profile with custom connection preferences.")
+        }
     }
 
     // MARK: - Header
@@ -178,23 +214,155 @@ public struct DeviceDiscoveryView: View {
         .padding(.vertical, 4)
     }
 
+    // MARK: - Saved Devices Section
+    private var savedDevicesSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Label("Saved Devices", systemImage: "tv.and.mediabox")
+                    .font(.subheadline.bold())
+                    .foregroundColor(.white)
+
+                Spacer()
+
+                Button(action: {
+                    vm.newDeviceName = ""
+                    vm.newDeviceHost = ""
+                    vm.isAddingDevice = true
+                }) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "plus.circle.fill")
+                        Text("Add Device")
+                    }
+                    .font(.caption.bold())
+                    .foregroundColor(.blue)
+                }
+            }
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(vm.profileManager.profiles) { profile in
+                        let isSelected = profile.id == vm.profileManager.activeProfile.id
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "tv.fill")
+                                    .font(.title3)
+                                    .foregroundColor(isSelected ? .cyan : .secondary)
+
+                                Spacer()
+
+                                if isSelected {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(.cyan)
+                                        .font(.caption)
+                                }
+                            }
+
+                            Text(profile.name)
+                                .font(.subheadline.bold())
+                                .foregroundColor(.white)
+                                .lineLimit(1)
+
+                            Text("\(profile.host):\(String(profile.port))")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                                .lineLimit(1)
+
+                            HStack {
+                                Button(action: {
+                                    vm.renamingDeviceName = profile.name
+                                    vm.profileManager.selectProfile(profile)
+                                    vm.isRenamingDevice = true
+                                }) {
+                                    Image(systemName: "pencil")
+                                        .font(.caption2)
+                                        .foregroundColor(.white.opacity(0.8))
+                                        .padding(6)
+                                        .background(Color(white: 0.22))
+                                        .clipShape(Circle())
+                                }
+                                .buttonStyle(.plain)
+
+                                if vm.profileManager.profiles.count > 1 {
+                                    Button(action: {
+                                        vm.profileManager.deleteProfile(id: profile.id)
+                                    }) {
+                                        Image(systemName: "trash")
+                                            .font(.caption2)
+                                            .foregroundColor(.red.opacity(0.8))
+                                            .padding(6)
+                                            .background(Color(white: 0.22))
+                                            .clipShape(Circle())
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+
+                                Spacer()
+
+                                Button(action: {
+                                    vm.quickConnect(to: profile)
+                                }) {
+                                    HStack(spacing: 4) {
+                                        Image(systemName: "play.fill")
+                                        Text("Connect")
+                                    }
+                                    .font(.caption2.bold())
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 5)
+                                    .background(isSelected ? Color.blue : Color(white: 0.25))
+                                    .cornerRadius(12)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(12)
+                        .frame(width: 175)
+                        .background(isSelected ? Color.blue.opacity(0.18) : Color(white: 0.12))
+                        .cornerRadius(14)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14)
+                                .stroke(isSelected ? Color.blue : Color(white: 0.2), lineWidth: isSelected ? 2 : 1)
+                        )
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            vm.profileManager.selectProfile(profile)
+                        }
+                    }
+                }
+                .padding(.vertical, 2)
+            }
+        }
+    }
+
     // MARK: - Connection Card
     private var connectionCard: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
-                Text(vm.currentTab == .camera ? "Camera Stream Target" : "Target Android Device")
-                    .font(.subheadline.bold())
-                    .foregroundColor(.white)
-                Spacer()
-                if vm.currentTab == .camera {
-                    Text("CAMERA MODE")
-                        .font(.caption2.bold())
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 3)
-                        .background(Color.yellow.opacity(0.2))
-                        .foregroundColor(.yellow)
-                        .cornerRadius(6)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(vm.currentTab == .camera ? "Camera Stream Target" : "Target Android Device")
+                        .font(.subheadline.bold())
+                        .foregroundColor(.white)
+                    Text("Profile: \(vm.profileManager.activeProfile.name)")
+                        .font(.caption2)
+                        .foregroundColor(.cyan)
                 }
+                Spacer()
+                Button(action: {
+                    vm.renamingDeviceName = vm.profileManager.activeProfile.name
+                    vm.isRenamingDevice = true
+                }) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "pencil")
+                        Text("Rename")
+                    }
+                    .font(.caption2.bold())
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color(white: 0.18))
+                    .cornerRadius(8)
+                }
+                .buttonStyle(.plain)
             }
 
             // IP Input
@@ -206,13 +374,13 @@ public struct DeviceDiscoveryView: View {
                     Image(systemName: "wifi")
                         .foregroundColor(.blue)
                         .frame(width: 20)
-                    TextField("192.168.1.150", text: $vm.hostInput)
+                    TextField("192.168.1.150", text: $vm.profileManager.activeProfile.host)
                         .textFieldStyle(.plain)
                         .foregroundColor(.white)
                         .autocorrectionDisabled(true)
                         .disableTextInputAutocapitalization()
-                    if !vm.hostInput.isEmpty {
-                        Button(action: { vm.hostInput = "" }) {
+                    if !vm.profileManager.activeProfile.host.isEmpty {
+                        Button(action: { vm.profileManager.activeProfile.host = "" }) {
                             Image(systemName: "xmark.circle.fill")
                                 .foregroundColor(.secondary)
                         }
@@ -232,7 +400,7 @@ public struct DeviceDiscoveryView: View {
                         .foregroundColor(.secondary)
                     Spacer()
                     Button("Default 5555") {
-                        vm.portInput = "5555"
+                        vm.profileManager.activeProfile.port = 5555
                     }
                     .font(.caption2)
                     .foregroundColor(.blue)
@@ -242,7 +410,7 @@ public struct DeviceDiscoveryView: View {
                     Image(systemName: "number")
                         .foregroundColor(.blue)
                         .frame(width: 20)
-                    TextField("5555", text: $vm.portInput)
+                    TextField("5555", value: $vm.profileManager.activeProfile.port, format: .number)
                         .textFieldStyle(.plain)
                         .foregroundColor(.white)
                 }
@@ -257,7 +425,7 @@ public struct DeviceDiscoveryView: View {
                     Text("Camera Lens")
                         .font(.caption.bold())
                         .foregroundColor(.secondary)
-                    Picker("Lens", selection: $vm.selectedCameraFacing) {
+                    Picker("Lens", selection: $vm.profileManager.activeProfile.cameraFacing) {
                         Text("Back Lens").tag(ScrcpyCameraFacing.back)
                         Text("Front Selfie Lens").tag(ScrcpyCameraFacing.front)
                         Text("External USB").tag(ScrcpyCameraFacing.external)
@@ -329,7 +497,7 @@ public struct DeviceDiscoveryView: View {
     // MARK: - Quality Settings Card
     private var qualityCard: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("Stream Quality & Codec")
+            Text("Stream Quality & Preferences (Saved per Profile)")
                 .font(.subheadline.bold())
                 .foregroundColor(.white)
 
@@ -339,7 +507,7 @@ public struct DeviceDiscoveryView: View {
                     Text("Codec")
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    Picker("Codec", selection: $vm.selectedCodec) {
+                    Picker("Codec", selection: $vm.profileManager.activeProfile.codec) {
                         Text("H.264").tag(ScrcpyVideoCodec.h264)
                         Text("H.265 (HEVC)").tag(ScrcpyVideoCodec.h265)
                     }
@@ -350,7 +518,7 @@ public struct DeviceDiscoveryView: View {
                     Text("Framerate")
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    Picker("FPS", selection: $vm.selectedFps) {
+                    Picker("FPS", selection: $vm.profileManager.activeProfile.fps) {
                         Text("30").tag(30)
                         Text("60").tag(60)
                         Text("120").tag(120)
@@ -364,7 +532,7 @@ public struct DeviceDiscoveryView: View {
                 Text("Max Resolution")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                Picker("Resolution", selection: $vm.selectedResolution) {
+                Picker("Resolution", selection: $vm.profileManager.activeProfile.resolution) {
                     Text("Native").tag(0)
                     Text("1080p").tag(1920)
                     Text("720p").tag(1280)
@@ -380,17 +548,21 @@ public struct DeviceDiscoveryView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                     Spacer()
-                    Text("\(Int(vm.selectedBitrateMbps)) Mbps")
+                    Text("\(Int(vm.profileManager.activeProfile.bitrateMbps)) Mbps")
                         .font(.caption.bold())
                         .foregroundColor(.cyan)
                 }
-                Slider(value: $vm.selectedBitrateMbps, in: 2...20, step: 1)
+                Slider(value: $vm.profileManager.activeProfile.bitrateMbps, in: 2...20, step: 1)
                     .tint(.cyan)
             }
 
-            Toggle(vm.currentTab == .camera ? "Forward Microphone Audio" : "Forward Device Audio", isOn: $vm.audioEnabled)
-                .font(.caption.bold())
-                .foregroundColor(.white)
+            // Audio Forwarding Toggle
+            Toggle(
+                vm.currentTab == .camera ? "Forward Microphone Audio" : "Forward Device Audio",
+                isOn: $vm.profileManager.activeProfile.audioEnabled
+            )
+            .font(.caption.bold())
+            .foregroundColor(.white)
         }
         .padding(18)
         .background(Color(white: 0.12))
@@ -421,14 +593,14 @@ public struct DeviceDiscoveryView: View {
 
             if vm.showAdvanced {
                 VStack(alignment: .leading, spacing: 12) {
-                    Toggle("Stay Awake (stay_awake=true)", isOn: $vm.stayAwake)
-                    Toggle("Show Touch Dots (show_touches=true)", isOn: $vm.showTouches)
+                    Toggle("Stay Awake (stay_awake=true)", isOn: $vm.profileManager.activeProfile.stayAwake)
+                    Toggle("Show Touch Dots (show_touches=true)", isOn: $vm.profileManager.activeProfile.showTouches)
 
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Custom Arguments (key=value):")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        TextField("crop=1080:1080:0:0 angle=90", text: $vm.customServerArgs)
+                        TextField("crop=1080:1080:0:0 angle=90", text: $vm.profileManager.activeProfile.customServerArgs)
                             .font(.system(.body, design: .monospaced))
                             .padding(8)
                             .background(Color(white: 0.1))
@@ -488,13 +660,13 @@ public struct DeviceDiscoveryView: View {
                 HStack {
                     Image(systemName: "wifi")
                         .foregroundColor(.green)
-                    TextField("e.g. 192.168.1.150", text: $vm.hostInput)
+                    TextField("e.g. 192.168.1.150", text: $vm.profileManager.activeProfile.host)
                         .textFieldStyle(.plain)
                         .foregroundColor(.white)
                         .autocorrectionDisabled(true)
                         .disableTextInputAutocapitalization()
-                    if !vm.hostInput.isEmpty {
-                        Button(action: { vm.hostInput = "" }) {
+                    if !vm.profileManager.activeProfile.host.isEmpty {
+                        Button(action: { vm.profileManager.activeProfile.host = "" }) {
                             Image(systemName: "xmark.circle.fill")
                                 .foregroundColor(.secondary)
                         }

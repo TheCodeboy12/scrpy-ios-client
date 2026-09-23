@@ -9,7 +9,7 @@ public enum ScrcpyClientState: Equatable, Sendable {
     case error(String)
 }
 
-public enum ScrcpyVideoSource: String, Sendable, CaseIterable {
+public enum ScrcpyVideoSource: String, Sendable, CaseIterable, Codable {
     case display = "display"
     case camera = "camera"
 
@@ -21,7 +21,7 @@ public enum ScrcpyVideoSource: String, Sendable, CaseIterable {
     }
 }
 
-public enum ScrcpyCameraFacing: String, Sendable, CaseIterable {
+public enum ScrcpyCameraFacing: String, Sendable, CaseIterable, Codable {
     case back = "back"
     case front = "front"
     case external = "external"
@@ -67,12 +67,15 @@ public final class ScrcpyClient: ObservableObject {
     public var customServerArgs: String = ""
 
     public let decoder: VideoToolboxDecoder
+    public let audioPlayer = PcmAudioPlayer()
     private var adbConnection: AdbConnection?
     private var serverProcessStream: AdbStream?
     private var videoStream: AdbStream?
+    private var audioStream: AdbStream?
     private var controlStream: AdbStream?
 
     private var videoTask: Task<Void, Never>?
+    private var audioTask: Task<Void, Never>?
     private var controlTask: Task<Void, Never>?
     private var statsTimer: Timer?
 
@@ -150,16 +153,22 @@ public final class ScrcpyClient: ObservableObject {
             if cameraHighSpeed {
                 args.append("camera_high_speed=true")
             }
-            // By default, audio when streaming camera can capture microphone
+            // In camera mode, audio captures device microphone
             if audioEnabled {
                 args.append("audio=true")
+                args.append("audio_codec=raw")
                 args.append("audio_source=mic")
             } else {
                 args.append("audio=false")
             }
         } else {
             args.append("video_source=display")
-            args.append("audio=\(audioEnabled)")
+            if audioEnabled {
+                args.append("audio=true")
+                args.append("audio_codec=raw")
+            } else {
+                args.append("audio=false")
+            }
         }
 
         if stayAwake {
@@ -233,6 +242,18 @@ public final class ScrcpyClient: ObservableObject {
                 }
                 self.videoStream = videoStream
 
+                // Connect Audio stream (if audio is enabled)
+                var aStream: AdbStream?
+                if self.audioEnabled {
+                    self.state = .connecting(step: "Connecting audio stream...")
+                    do {
+                        aStream = try await conn.openStream(destination: "localabstract:scrcpy_\(scidHex)")
+                        self.audioStream = aStream
+                    } catch {
+                        print("[ScrcpyClient] Failed to open audio stream: \(error)")
+                    }
+                }
+
                 // Open Control stream
                 self.state = .connecting(step: "Connecting control stream...")
                 let cStream = try await conn.openStream(destination: "localabstract:scrcpy_\(scidHex)")
@@ -243,6 +264,9 @@ public final class ScrcpyClient: ObservableObject {
 
                 // Start streams processing
                 self.startVideoProcessing(stream: videoStream)
+                if let aStream = aStream {
+                    self.startAudioProcessing(stream: aStream)
+                }
                 self.startControlProcessing(stream: cStream)
 
             } catch {
@@ -338,6 +362,49 @@ public final class ScrcpyClient: ObservableObject {
                             isKeyFrame: header.isKeyFrame
                         )
                     }
+                }
+            }
+        }
+    }
+
+    private func startAudioProcessing(stream: AdbStream) {
+        audioPlayer.start()
+        audioTask = Task.detached { [weak self] in
+            guard let self = self else { return }
+            var buffer = Data()
+            var codecHandled = false
+
+            for await chunk in stream.incomingData {
+                buffer.append(chunk)
+
+                // 1. Read 4-byte Codec ID
+                if !codecHandled {
+                    guard buffer.count >= 4 else { continue }
+                    let codecData = Data(buffer.prefix(4))
+                    buffer = Data(buffer.dropFirst(4))
+                    let codecId = codecData.withUnsafeBytes { $0.load(as: UInt32.self).bigEndian }
+                    print(String(format: "[ScrcpyClient] Audio stream connected (Codec ID: 0x%08X)", codecId))
+                    if codecId == 0 {
+                        print("[ScrcpyClient] Audio recording unsupported or disabled by device")
+                        return
+                    }
+                    codecHandled = true
+                }
+
+                // 2. Read audio packet loop (12-byte header + payload)
+                while buffer.count >= 12 {
+                    let headerData = Data(buffer.prefix(12))
+                    let packetSize = Int(headerData[8...11].withUnsafeBytes { $0.load(as: UInt32.self).bigEndian })
+
+                    guard buffer.count >= 12 + packetSize else {
+                        break // Wait for remaining audio payload
+                    }
+
+                    buffer = Data(buffer.dropFirst(12))
+                    let audioData = Data(buffer.prefix(packetSize))
+                    buffer = Data(buffer.dropFirst(packetSize))
+
+                    self.audioPlayer.enqueue(data: audioData)
                 }
             }
         }
@@ -452,11 +519,15 @@ public final class ScrcpyClient: ObservableObject {
         statsTimer = nil
         videoTask?.cancel()
         videoTask = nil
+        audioTask?.cancel()
+        audioTask = nil
         controlTask?.cancel()
         controlTask = nil
+        audioPlayer.stop()
 
         Task {
             await videoStream?.close()
+            await audioStream?.close()
             await controlStream?.close()
             await serverProcessStream?.close()
             adbConnection?.disconnect()

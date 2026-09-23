@@ -18,12 +18,15 @@
 		5D93C86DAC37602340DD55DD /* scrcpy-server.jar in Resources */ = {isa = PBXBuildFile; fileRef = 8E6C177C605DE22326A835A0 /* scrcpy-server.jar */; };
 		5FB54020167209612A7E0566 /* NaluParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19234E8311B76C7656FA11F2 /* NaluParser.swift */; };
 		7178FCC85D0878C48F691C6E /* ScrcpyDeviceMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1312DB527D9AEF46EDCFED2C /* ScrcpyDeviceMessage.swift */; };
+		827848672232F70AC5EB16AB /* ConnectionProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E159E109C1FD4E966EF79F23 /* ConnectionProfile.swift */; };
 		8B62DEC3D81A5E6B8A99C68E /* MirrorSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4C1330C4C6B0C1F6EF4D32 /* MirrorSessionView.swift */; };
 		AA067D17A7C5587158E1DF6F /* AdbConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8731DAA9D092F0684938AFE6 /* AdbConnection.swift */; };
+		AF8109F7351004E69FD020CA /* ProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8C3772A250BFC2B149A124 /* ProfileManager.swift */; };
 		B1DAEF532C281FBC71009476 /* VideoToolboxDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD50D7482F2B713C25B68D9 /* VideoToolboxDecoder.swift */; };
 		B1F01390CE3FDE28A319DADA /* scrcpy-server-v4.1 in Resources */ = {isa = PBXBuildFile; fileRef = D5A7FBF59F3573602E115647 /* scrcpy-server-v4.1 */; };
 		B21914CBDB75BD79806B9E57 /* ScrcpyClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E56D51BCF1C701C7CF32AE /* ScrcpyClient.swift */; };
 		B5C561A08463392D6C2D9581 /* ScrcpyControlMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B51CC38D456EB0FD6A56E5 /* ScrcpyControlMessage.swift */; };
+		B626013D495E7D7E4B61EBE5 /* PcmAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843E7EA6980EF25A0A9A9E1D /* PcmAudioPlayer.swift */; };
 		D14A77F9AF8B48FAA52EE20A /* ScrcpyProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76546B7AF51A92846003C6A /* ScrcpyProtocol.swift */; };
 		D49B5A184152842C434AFC05 /* ScrcpyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD05055BDC561C4DA67945AE /* ScrcpyApp.swift */; };
 		D934A94B055568E50E58BAD9 /* AdbCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E86C726647F4D51EE9CC44D /* AdbCrypto.swift */; };
@@ -66,6 +69,7 @@
 		6D225972BBD5EA5404B65878 /* ScrcpyVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrcpyVideoView.swift; sourceTree = "<group>"; };
 		75B51CC38D456EB0FD6A56E5 /* ScrcpyControlMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrcpyControlMessage.swift; sourceTree = "<group>"; };
 		7B4C1330C4C6B0C1F6EF4D32 /* MirrorSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorSessionView.swift; sourceTree = "<group>"; };
+		843E7EA6980EF25A0A9A9E1D /* PcmAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcmAudioPlayer.swift; sourceTree = "<group>"; };
 		86C69CD32AA5246BF78C02C5 /* scrcpy-server */ = {isa = PBXFileReference; path = "scrcpy-server"; sourceTree = "<group>"; };
 		8731DAA9D092F0684938AFE6 /* AdbConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbConnection.swift; sourceTree = "<group>"; };
 		8E6C177C605DE22326A835A0 /* scrcpy-server.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = "scrcpy-server.jar"; sourceTree = "<group>"; };
@@ -80,6 +84,8 @@
 		D6861E1B020D5C9BB897F763 /* GestureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureController.swift; sourceTree = "<group>"; };
 		D76546B7AF51A92846003C6A /* ScrcpyProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrcpyProtocol.swift; sourceTree = "<group>"; };
 		D7D2B5A6616DD261C2599D09 /* DeviceDiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDiscoveryView.swift; sourceTree = "<group>"; };
+		DA8C3772A250BFC2B149A124 /* ProfileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileManager.swift; sourceTree = "<group>"; };
+		E159E109C1FD4E966EF79F23 /* ConnectionProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionProfile.swift; sourceTree = "<group>"; };
 		E26DAC775207AD3C55442F91 /* Data+Binary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Binary.swift"; sourceTree = "<group>"; };
 		E46E9F589B2EECFBF1D75222 /* ScrcpyKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ScrcpyKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -99,6 +105,7 @@
 		0F72F14F31188F1E3BC87C6D /* Session */ = {
 			isa = PBXGroup;
 			children = (
+				E159E109C1FD4E966EF79F23 /* ConnectionProfile.swift */,
 				D6861E1B020D5C9BB897F763 /* GestureController.swift */,
 				C2E56D51BCF1C701C7CF32AE /* ScrcpyClient.swift */,
 			);
@@ -112,6 +119,14 @@
 				E46E9F589B2EECFBF1D75222 /* ScrcpyKit.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		1902953763A580A091DAB556 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				DA8C3772A250BFC2B149A124 /* ProfileManager.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		196CCD8298E8024225E6EACF /* Video */ = {
@@ -156,10 +171,19 @@
 			);
 			sourceTree = "<group>";
 		};
+		79A97AE2FF7C5C990F79AF63 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				843E7EA6980EF25A0A9A9E1D /* PcmAudioPlayer.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
 		A48497DCAB3564ECB1B7AE82 /* ScrcpyKit */ = {
 			isa = PBXGroup;
 			children = (
 				4BACE2DADA77CC0AC1CB4BDF /* Adb */,
+				79A97AE2FF7C5C990F79AF63 /* Audio */,
 				EA4893B127F9B3575A36590B /* Protocol */,
 				FAE111223A19FEE1E0BEA871 /* Resources */,
 				0F72F14F31188F1E3BC87C6D /* Session */,
@@ -173,6 +197,7 @@
 			isa = PBXGroup;
 			children = (
 				BD05055BDC561C4DA67945AE /* ScrcpyApp.swift */,
+				1902953763A580A091DAB556 /* Models */,
 				4BFCD9B8EC74D10C067587AC /* Resources */,
 				D3FD49EF6719570C5BFC78EC /* Views */,
 			);
@@ -313,9 +338,11 @@
 				47ED1ECF7487FF9AA02D4390 /* AdbPairService.swift in Sources */,
 				576DF363A555846EAB17DEDD /* AdbStream.swift in Sources */,
 				EFF80D6ED996DA43683CA0A2 /* AdbSyncService.swift in Sources */,
+				827848672232F70AC5EB16AB /* ConnectionProfile.swift in Sources */,
 				3DEA27349DDF45303E5928FB /* Data+Binary.swift in Sources */,
 				E53B897CB48739B0298C1996 /* GestureController.swift in Sources */,
 				5FB54020167209612A7E0566 /* NaluParser.swift in Sources */,
+				B626013D495E7D7E4B61EBE5 /* PcmAudioPlayer.swift in Sources */,
 				B21914CBDB75BD79806B9E57 /* ScrcpyClient.swift in Sources */,
 				B5C561A08463392D6C2D9581 /* ScrcpyControlMessage.swift in Sources */,
 				7178FCC85D0878C48F691C6E /* ScrcpyDeviceMessage.swift in Sources */,
@@ -331,6 +358,7 @@
 			files = (
 				309469F8E1B56F70AC89A634 /* DeviceDiscoveryView.swift in Sources */,
 				8B62DEC3D81A5E6B8A99C68E /* MirrorSessionView.swift in Sources */,
+				AF8109F7351004E69FD020CA /* ProfileManager.swift in Sources */,
 				D49B5A184152842C434AFC05 /* ScrcpyApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
