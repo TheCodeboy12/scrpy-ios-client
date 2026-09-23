@@ -53,7 +53,9 @@ public struct ScrcpyApp: App {
     public var body: some Scene {
         WindowGroup("Scrcpy iOS Client") {
             RootContentView(client: client)
+                #if os(macOS)
                 .frame(minWidth: 420, idealWidth: 480, minHeight: 680, idealHeight: 800)
+                #endif
         }
     }
 }

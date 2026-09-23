@@ -20,6 +20,7 @@
 		7178FCC85D0878C48F691C6E /* ScrcpyDeviceMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1312DB527D9AEF46EDCFED2C /* ScrcpyDeviceMessage.swift */; };
 		827848672232F70AC5EB16AB /* ConnectionProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E159E109C1FD4E966EF79F23 /* ConnectionProfile.swift */; };
 		8B62DEC3D81A5E6B8A99C68E /* MirrorSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4C1330C4C6B0C1F6EF4D32 /* MirrorSessionView.swift */; };
+		8F251428283091408AF3E90C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40318CECC7AD14DFD2D279DE /* Assets.xcassets */; };
 		AA067D17A7C5587158E1DF6F /* AdbConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8731DAA9D092F0684938AFE6 /* AdbConnection.swift */; };
 		AF8109F7351004E69FD020CA /* ProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8C3772A250BFC2B149A124 /* ProfileManager.swift */; };
 		B1DAEF532C281FBC71009476 /* VideoToolboxDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD50D7482F2B713C25B68D9 /* VideoToolboxDecoder.swift */; };
@@ -64,6 +65,7 @@
 		19234E8311B76C7656FA11F2 /* NaluParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaluParser.swift; sourceTree = "<group>"; };
 		263E9A2E3FB170988357A050 /* AdbSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbSyncService.swift; sourceTree = "<group>"; };
 		3EA3F566E22C450B2F03EBB4 /* AdbMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbMessage.swift; sourceTree = "<group>"; };
+		40318CECC7AD14DFD2D279DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		50FC3F9AF3EC9579F27E9F1A /* AdbStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbStream.swift; sourceTree = "<group>"; };
 		661D32CB951F8E303A3B2DEE /* AdbPairService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbPairService.swift; sourceTree = "<group>"; };
 		6D225972BBD5EA5404B65878 /* ScrcpyVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrcpyVideoView.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 		4BFCD9B8EC74D10C067587AC /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				40318CECC7AD14DFD2D279DE /* Assets.xcassets */,
 				86C69CD32AA5246BF78C02C5 /* scrcpy-server */,
 				D5A7FBF59F3573602E115647 /* scrcpy-server-v4.1 */,
 				8E6C177C605DE22326A835A0 /* scrcpy-server.jar */,
@@ -320,6 +323,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F251428283091408AF3E90C /* Assets.xcassets in Resources */,
 				B1F01390CE3FDE28A319DADA /* scrcpy-server-v4.1 in Resources */,
 				5D93C86DAC37602340DD55DD /* scrcpy-server.jar in Resources */,
 			);

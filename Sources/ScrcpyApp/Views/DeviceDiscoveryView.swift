@@ -177,10 +177,11 @@ public struct DeviceDiscoveryView: View {
                     helpCard
                 }
             }
-            .padding(24)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 20)
             .frame(maxWidth: 540)
         }
-        .frame(minWidth: 460)
+        .frame(maxWidth: .infinity)
         .background(Color(white: 0.08).ignoresSafeArea())
         .onAppear {
             if pairingHostInput.isEmpty {
