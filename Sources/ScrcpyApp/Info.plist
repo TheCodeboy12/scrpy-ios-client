@@ -22,6 +22,14 @@
 	<string>1</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Scrcpy needs access to your local Wi-Fi network to connect to and mirror your Android device.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Scrcpy needs access to save recorded videos to your Photos library.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Scrcpy needs access to save recorded videos to your Photos library.</string>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>

@@ -19,6 +19,11 @@ public final class VideoToolboxDecoder: @unchecked Sendable {
 
     public var onSampleBufferDecoded: (@Sendable (CMSampleBuffer) -> Void)?
     public var onDimensionsChanged: (@Sendable (Int, Int) -> Void)?
+    private var sampleBufferListeners: [@Sendable (CMSampleBuffer) -> Void] = []
+
+    public func addSampleBufferListener(_ listener: @escaping @Sendable (CMSampleBuffer) -> Void) {
+        sampleBufferListeners.append(listener)
+    }
 
     public init(codec: ScrcpyVideoCodec = .h264) {
         self.codec = codec
@@ -62,6 +67,9 @@ public final class VideoToolboxDecoder: @unchecked Sendable {
         }
 
         onSampleBufferDecoded?(sampleBuffer)
+        for listener in sampleBufferListeners {
+            listener(sampleBuffer)
+        }
     }
 
     private func extractParameters(from units: [NaluUnit]) {

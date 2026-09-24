@@ -25,6 +25,7 @@ Stream and control your Android device directly from your iPhone or iPad over Wi
 - 📶 **Autonomous Wireless Connection**: iPhone communicates directly with Android over TCP. Includes a built-in pure Swift ADB client supporting handshake, RSA-2048 authentication, server push, and multi-channel multiplexing.
 - 🔑 **Built-in Android 11+ Wireless Pairing**: Pair once with a 6-digit code and pairing port directly from your iOS device without touching a terminal or PC.
 - 📷 **Direct Android Camera Streaming**: Stream high-definition video from Android's **Back**, **Front Selfie**, or **External USB** camera lenses with microphone audio forwarding, zoom controls, and flashlight/torch toggle.
+- 🎥 **Lossless Stream Recording (Files & Photos)**: Record live camera and screen feeds directly into standard MP4 files without re-encoding (0% CPU/GPU overhead). Automatically saves to the iOS **Files** app (`On My iPhone > Scrcpy`) and 1-tap/auto-saves to Apple **Photos** Camera Roll.
 - 💾 **Device Profiles & Persistent Settings**: Automatically remembers all connected devices, lets you name them (e.g. "Living Room TV Box", "Pixel Fold"), and saves your preferred resolution, framerate, bitrate, codec, and audio choices across app launches.
 - 👆 **Sub-Pixel Multi-Touch & Gestures**: Native iOS touch events mapped directly into Android touch coordinates with multi-finger drag, fling, and tap support.
 - 🎮 **Dedicated Android Navigation Bar**: Back, Home, App Switcher / Recents, Power, Volume, and Screen Rotation controls, with a dedicated thumb-friendly dock in landscape mode.
@@ -122,9 +123,8 @@ Stream and control your Android device directly from your iPhone or iPad over Wi
 3. Press **Run** (`⌘R`).
 
 ### Sideloading (IPA)
-A pre-packaged IPA is available in the `build/` directory:
-- `build/Scrcpy.ipa`
-Can be installed on real iOS devices using tools like TrollStore, AltStore, Sideloadly, or Apple Configurator.
+Download the pre-packaged `Scrcpy.ipa` from the [Releases](https://github.com/TheCodeboy12/scrpy-ios-client/releases) section.
+Can be installed directly on real iOS devices using tools like TrollStore, AltStore, Sideloadly, or Apple Configurator.
 
 ### Run Automated Tests
 ```bash

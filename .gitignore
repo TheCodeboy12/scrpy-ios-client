@@ -9,7 +9,8 @@ xcuserdata/
 .swiftpm/
 
 # Local build artifacts
-build/Payload/
+build/
+*.ipa
 Scrcpy.app/
 main
 

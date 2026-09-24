@@ -226,6 +226,35 @@ do {
     print("  ✓ NaluParser tests passed")
 }
 
+// MARK: - StreamRecorder Tests
+print("[TEST] StreamRecorder Lifecycle & Directory Tests...")
+do {
+    let recDir = StreamRecorder.recordingsDirectory
+    assertTrue(FileManager.default.fileExists(atPath: recDir.path), "Recordings directory created")
+
+    let recorder = StreamRecorder()
+    assertEqual(recorder.state, .idle, "Initial state idle")
+    assertEqual(recorder.isRecording, false, "Initial isRecording false")
+
+    recorder.startRecording(source: .camera, includeAudio: false, customFileName: "test_record.mp4")
+    assertEqual(recorder.state, .waitingForFirstKeyframe, "State is waiting for keyframe")
+
+    let sema = DispatchSemaphore(value: 0)
+    Task {
+        do {
+            let url = try await recorder.stopRecording()
+            assertEqual(url, nil, "Cancelled recording returns nil when no keyframes fed")
+            assertEqual(recorder.state, .idle, "State reset to idle")
+        } catch {
+            print("❌ Unexpected recorder error: \(error)")
+            exit(1)
+        }
+        sema.signal()
+    }
+    sema.wait()
+    print("  ✓ StreamRecorder lifecycle tests passed")
+}
+
 print("========================================")
 print("  All ScrcpyKit Tests Passed Successfully! ✓")
 print("========================================")

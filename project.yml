@@ -40,6 +40,10 @@ targets:
       properties:
         CFBundleDisplayName: "Scrcpy"
         NSLocalNetworkUsageDescription: "Scrcpy needs access to your local Wi-Fi network to connect to and mirror your Android device."
+        NSPhotoLibraryAddUsageDescription: "Scrcpy needs access to save recorded videos to your Photos library."
+        NSPhotoLibraryUsageDescription: "Scrcpy needs access to save recorded videos to your Photos library."
+        UIFileSharingEnabled: YES
+        LSSupportsOpeningDocumentsInPlace: YES
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait

@@ -11,6 +11,7 @@
 		309469F8E1B56F70AC89A634 /* DeviceDiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D2B5A6616DD261C2599D09 /* DeviceDiscoveryView.swift */; };
 		3DEA27349DDF45303E5928FB /* Data+Binary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26DAC775207AD3C55442F91 /* Data+Binary.swift */; };
 		47ED1ECF7487FF9AA02D4390 /* AdbPairService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661D32CB951F8E303A3B2DEE /* AdbPairService.swift */; };
+		4FC86FDA728883541C46A4E1 /* RecordingsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661B40E3D09AD19530DDB2E /* RecordingsListView.swift */; };
 		5030EE7DDAE466FE7B258DB3 /* scrcpy-server.jar in Resources */ = {isa = PBXBuildFile; fileRef = AF6160161D4E79771911FBDE /* scrcpy-server.jar */; };
 		52265AC84DB025335C121B41 /* AdbMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA3F566E22C450B2F03EBB4 /* AdbMessage.swift */; };
 		576DF363A555846EAB17DEDD /* AdbStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FC3F9AF3EC9579F27E9F1A /* AdbStream.swift */; };
@@ -18,6 +19,7 @@
 		5D93C86DAC37602340DD55DD /* scrcpy-server.jar in Resources */ = {isa = PBXBuildFile; fileRef = 8E6C177C605DE22326A835A0 /* scrcpy-server.jar */; };
 		5FB54020167209612A7E0566 /* NaluParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19234E8311B76C7656FA11F2 /* NaluParser.swift */; };
 		7178FCC85D0878C48F691C6E /* ScrcpyDeviceMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1312DB527D9AEF46EDCFED2C /* ScrcpyDeviceMessage.swift */; };
+		7E10853161D2BC045D36137A /* StreamRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AF5DA66FB9E6577324878 /* StreamRecorder.swift */; };
 		827848672232F70AC5EB16AB /* ConnectionProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E159E109C1FD4E966EF79F23 /* ConnectionProfile.swift */; };
 		8B62DEC3D81A5E6B8A99C68E /* MirrorSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4C1330C4C6B0C1F6EF4D32 /* MirrorSessionView.swift */; };
 		8F251428283091408AF3E90C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40318CECC7AD14DFD2D279DE /* Assets.xcassets */; };
@@ -62,8 +64,10 @@
 
 /* Begin PBXFileReference section */
 		1312DB527D9AEF46EDCFED2C /* ScrcpyDeviceMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrcpyDeviceMessage.swift; sourceTree = "<group>"; };
+		148AF5DA66FB9E6577324878 /* StreamRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamRecorder.swift; sourceTree = "<group>"; };
 		19234E8311B76C7656FA11F2 /* NaluParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaluParser.swift; sourceTree = "<group>"; };
 		263E9A2E3FB170988357A050 /* AdbSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbSyncService.swift; sourceTree = "<group>"; };
+		2661B40E3D09AD19530DDB2E /* RecordingsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingsListView.swift; sourceTree = "<group>"; };
 		3EA3F566E22C450B2F03EBB4 /* AdbMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbMessage.swift; sourceTree = "<group>"; };
 		40318CECC7AD14DFD2D279DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		50FC3F9AF3EC9579F27E9F1A /* AdbStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbStream.swift; sourceTree = "<group>"; };
@@ -110,6 +114,7 @@
 				E159E109C1FD4E966EF79F23 /* ConnectionProfile.swift */,
 				D6861E1B020D5C9BB897F763 /* GestureController.swift */,
 				C2E56D51BCF1C701C7CF32AE /* ScrcpyClient.swift */,
+				148AF5DA66FB9E6577324878 /* StreamRecorder.swift */,
 			);
 			path = Session;
 			sourceTree = "<group>";
@@ -213,6 +218,7 @@
 			children = (
 				D7D2B5A6616DD261C2599D09 /* DeviceDiscoveryView.swift */,
 				7B4C1330C4C6B0C1F6EF4D32 /* MirrorSessionView.swift */,
+				2661B40E3D09AD19530DDB2E /* RecordingsListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -352,6 +358,7 @@
 				7178FCC85D0878C48F691C6E /* ScrcpyDeviceMessage.swift in Sources */,
 				D14A77F9AF8B48FAA52EE20A /* ScrcpyProtocol.swift in Sources */,
 				E0C56A04A3112A8357397F7A /* ScrcpyVideoView.swift in Sources */,
+				7E10853161D2BC045D36137A /* StreamRecorder.swift in Sources */,
 				B1DAEF532C281FBC71009476 /* VideoToolboxDecoder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -363,6 +370,7 @@
 				309469F8E1B56F70AC89A634 /* DeviceDiscoveryView.swift in Sources */,
 				8B62DEC3D81A5E6B8A99C68E /* MirrorSessionView.swift in Sources */,
 				AF8109F7351004E69FD020CA /* ProfileManager.swift in Sources */,
+				4FC86FDA728883541C46A4E1 /* RecordingsListView.swift in Sources */,
 				D49B5A184152842C434AFC05 /* ScrcpyApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

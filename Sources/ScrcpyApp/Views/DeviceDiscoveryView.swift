@@ -143,6 +143,8 @@ public struct DeviceDiscoveryView: View {
     @AppStorage("scrcpy_pairing_port") private var pairingPortInput: String = ""
     @AppStorage("scrcpy_pairing_code") private var pairingCodeInput: String = ""
     @AppStorage("scrcpy_show_advanced") private var showAdvanced: Bool = false
+    @AppStorage("scrcpy_auto_save_photos") private var autoSaveToPhotos: Bool = true
+    @State private var showRecordingsSheet: Bool = false
 
     public init(client: ScrcpyClient) {
         _vm = StateObject(wrappedValue: DeviceDiscoveryViewModel(client: client))
@@ -210,6 +212,9 @@ public struct DeviceDiscoveryView: View {
         } message: {
             Text("Add a new Android device profile with custom connection preferences.")
         }
+        .sheet(isPresented: $showRecordingsSheet) {
+            RecordingsListView()
+        }
     }
 
     // MARK: - Header
@@ -228,6 +233,20 @@ public struct DeviceDiscoveryView: View {
                     .foregroundColor(.secondary)
             }
             Spacer()
+
+            Button(action: { showRecordingsSheet = true }) {
+                VStack(spacing: 3) {
+                    Image(systemName: "film.stack")
+                        .font(.title3)
+                    Text("Recordings")
+                        .font(.system(size: 10, weight: .semibold))
+                }
+                .foregroundColor(.cyan)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(Color.cyan.opacity(0.15))
+                .cornerRadius(10)
+            }
         }
         .padding(.vertical, 4)
     }
@@ -594,6 +613,13 @@ public struct DeviceDiscoveryView: View {
             )
             .font(.caption.bold())
             .foregroundColor(.white)
+
+            Divider().background(Color(white: 0.2))
+
+            // Auto-Save Recordings to Photos
+            Toggle("Auto-Save Recordings to Photos", isOn: $autoSaveToPhotos)
+                .font(.caption.bold())
+                .foregroundColor(.white)
         }
         .padding(18)
         .background(Color(white: 0.12))

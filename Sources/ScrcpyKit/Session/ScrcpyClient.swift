@@ -68,6 +68,7 @@ public final class ScrcpyClient: ObservableObject {
 
     public let decoder: VideoToolboxDecoder
     public let audioPlayer = PcmAudioPlayer()
+    public let recorder = StreamRecorder()
     private var adbConnection: AdbConnection?
     private var serverProcessStream: AdbStream?
     private var videoStream: AdbStream?
@@ -113,6 +114,9 @@ public final class ScrcpyClient: ObservableObject {
             DispatchQueue.main.async {
                 self?.videoDimensions = CGSize(width: width, height: height)
             }
+        }
+        decoder.addSampleBufferListener { [weak self] buffer in
+            self?.recorder.appendVideoSample(buffer)
         }
     }
 
@@ -405,6 +409,9 @@ public final class ScrcpyClient: ObservableObject {
                     buffer = Data(buffer.dropFirst(packetSize))
 
                     self.audioPlayer.enqueue(data: audioData)
+                    let ptsUs = headerData[0...7].withUnsafeBytes { $0.load(as: UInt64.self).bigEndian }
+                    let ptsTime = CMTime(value: Int64(ptsUs), timescale: 1_000_000)
+                    self.recorder.appendAudioData(audioData, pts: ptsTime)
                 }
             }
         }
@@ -536,6 +543,22 @@ public final class ScrcpyClient: ObservableObject {
             self.state = .disconnected
             self.decoder.reset()
         }
+
+        if recorder.isRecording {
+            Task { [recorder] in
+                try? await recorder.stopRecording()
+            }
+        }
+    }
+
+    // MARK: - Stream Recording
+    public func startRecording(customFileName: String? = nil) {
+        recorder.startRecording(source: videoSource, includeAudio: audioEnabled, customFileName: customFileName)
+    }
+
+    @discardableResult
+    public func stopRecording() async throws -> URL? {
+        return try await recorder.stopRecording()
     }
 
     private func loadBundledServerJar() -> Data? {
