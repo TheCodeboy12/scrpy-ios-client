@@ -111,12 +111,14 @@ public final class ScrcpyClient: ObservableObject {
 
     private func setupDecoderCallbacks() {
         decoder.onDimensionsChanged = { [weak self] width, height in
-            DispatchQueue.main.async {
-                self?.videoDimensions = CGSize(width: width, height: height)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.videoDimensions = CGSize(width: width, height: height)
             }
         }
         decoder.addSampleBufferListener { [weak self] buffer in
-            self?.recorder.appendVideoSample(buffer)
+            guard let self = self else { return }
+            self.recorder.appendVideoSample(buffer)
         }
     }
 
@@ -200,8 +202,9 @@ public final class ScrcpyClient: ObservableObject {
                 self.state = .connecting(step: "Connecting to ADB (\(host):\(port))...")
                 let conn = AdbConnection(host: host, port: port)
                 conn.onHandshakeStep = { [weak self] step in
-                    Task { @MainActor in
-                        self?.state = .connecting(step: step)
+                    Task { @MainActor [weak self] in
+                        guard let self = self else { return }
+                        self.state = .connecting(step: step)
                     }
                 }
                 self.adbConnection = conn
@@ -310,7 +313,8 @@ public final class ScrcpyClient: ObservableObject {
                     let name = String(data: nameData, encoding: .utf8)?
                         .trimmingCharacters(in: .controlCharacters) ?? "Android Device"
                     Task { @MainActor [weak self] in
-                        self?.deviceName = name
+                        guard let self = self else { return }
+                        self.deviceName = name
                     }
                     deviceNameHandled = true
                 }
@@ -336,7 +340,8 @@ public final class ScrcpyClient: ObservableObject {
                             let w = sessionMeta.width
                             let h = sessionMeta.height
                             Task { @MainActor [weak self] in
-                                self?.videoDimensions = CGSize(width: w, height: h)
+                                guard let self = self else { return }
+                                self.videoDimensions = CGSize(width: w, height: h)
                             }
                         } else {
                             buffer = Data(buffer.dropFirst(1))
@@ -421,6 +426,7 @@ public final class ScrcpyClient: ObservableObject {
 
     private func startControlProcessing(stream: AdbStream) {
         controlTask = Task.detached { [weak self] in
+            guard let self = self else { return }
             var buffer = Data()
             for await chunk in stream.incomingData {
                 buffer.append(chunk)
@@ -428,7 +434,7 @@ public final class ScrcpyClient: ObservableObject {
                 while !buffer.isEmpty {
                     if let result = ScrcpyDeviceMessage.deserialize(from: buffer) {
                         buffer = Data(buffer.dropFirst(result.bytesConsumed))
-                        await self?.handleDeviceMessage(result.message)
+                        await self.handleDeviceMessage(result.message)
                     } else {
                         break
                     }
@@ -517,8 +523,9 @@ public final class ScrcpyClient: ObservableObject {
     private func startStatsTimer() {
         statsTimer?.invalidate()
         statsTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            Task { @MainActor in
-                self?.currentFps = self?.decoder.currentFps ?? 0.0
+            Task { @MainActor [weak self] in
+                guard let self = self else { return }
+                self.currentFps = self.decoder.currentFps
             }
         }
     }

@@ -180,11 +180,13 @@ public struct MirrorSessionView: View {
             }
             .presentationDetents([.height(240), .medium])
         }
+        #if canImport(UIKit)
         .sheet(isPresented: $showShareSheet) {
             if let url = recordedURL {
                 ShareSheetView(url: url)
             }
         }
+        #endif
         .sheet(isPresented: $showRecordingsGallery) {
             RecordingsListView()
         }
@@ -193,7 +195,9 @@ public struct MirrorSessionView: View {
         } message: {
             Text("iOS clipboard contents sent to Android device.")
         }
+        #if os(iOS)
         .statusBarHidden(!showControls)
+        #endif
         .onTapGesture {
             withAnimation(.easeInOut(duration: 0.2)) {
                 showControls.toggle()
@@ -545,6 +549,9 @@ public struct MirrorSessionView: View {
 }
 
 // MARK: - Share Sheet View
+#if canImport(UIKit)
+import UIKit
+
 private struct ShareSheetView: UIViewControllerRepresentable {
     let url: URL
 
@@ -554,3 +561,4 @@ private struct ShareSheetView: UIViewControllerRepresentable {
 
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
+#endif

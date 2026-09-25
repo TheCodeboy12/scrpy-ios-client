@@ -25,7 +25,7 @@ jobs:
         run: xcodegen generate
 
       - name: Run ScrcpyKit Tests
-        run: swift test || swift run ScrcpyTests
+        run: swift run ScrcpyTests
 
       - name: Build Release Archive
         run: |

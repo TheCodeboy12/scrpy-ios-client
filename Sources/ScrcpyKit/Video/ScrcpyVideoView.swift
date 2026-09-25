@@ -84,7 +84,7 @@ public struct ScrcpyVideoView: UIViewRepresentable {
 
         func setup(view: UIVideoSampleBufferView, session: ScrcpyClient) {
             session.decoder.onSampleBufferDecoded = { [weak view] sampleBuffer in
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [weak view] in
                     view?.enqueue(sampleBuffer)
                 }
             }
@@ -127,7 +127,7 @@ public struct ScrcpyVideoView: NSViewRepresentable {
     public func makeNSView(context: Context) -> NSVideoSampleBufferView {
         let view = NSVideoSampleBufferView()
         session.decoder.onSampleBufferDecoded = { [weak view] sampleBuffer in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak view] in
                 view?.enqueue(sampleBuffer)
             }
         }

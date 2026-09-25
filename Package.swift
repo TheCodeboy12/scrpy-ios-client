@@ -13,10 +13,6 @@ let package = Package(
             targets: ["ScrcpyKit"]
         ),
         .executable(
-            name: "ScrcpyApp",
-            targets: ["ScrcpyApp"]
-        ),
-        .executable(
             name: "ScrcpyTests",
             targets: ["ScrcpyTests"]
         )
@@ -27,17 +23,6 @@ let package = Package(
             name: "ScrcpyKit",
             dependencies: [],
             path: "Sources/ScrcpyKit",
-            resources: [
-                .process("Resources")
-            ]
-        ),
-        .executableTarget(
-            name: "ScrcpyApp",
-            dependencies: ["ScrcpyKit"],
-            path: "Sources/ScrcpyApp",
-            exclude: [
-                "Info.plist"
-            ],
             resources: [
                 .process("Resources")
             ]
