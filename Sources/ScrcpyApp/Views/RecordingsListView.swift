@@ -105,9 +105,11 @@ public struct RecordingsListView: View {
             .sheet(item: $selectedVideoURL) { url in
                 VideoPlayerSheet(url: url)
             }
+            #if canImport(UIKit)
             .sheet(item: $shareURL) { url in
                 ActivityViewWrapper(activityItems: [url])
             }
+            #endif
             .alert("Delete Recording?", isPresented: $showDeleteConfirmation, presenting: itemToDelete) { item in
                 Button("Delete", role: .destructive) {
                     deleteItem(item)
@@ -296,25 +298,44 @@ public struct RecordingsListView: View {
 private struct VideoPlayerSheet: View {
     @Environment(\.dismiss) private var dismiss
     let url: URL
+    @State private var player: AVPlayer?
 
     var body: some View {
         NavigationStack {
-            VideoPlayer(player: AVPlayer(url: url))
-                .ignoresSafeArea()
-                .navigationTitle(url.lastPathComponent)
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Done") {
-                            dismiss()
-                        }
+            Group {
+                if let player = player {
+                    VideoPlayer(player: player)
+                        .ignoresSafeArea()
+                } else {
+                    ProgressView()
+                }
+            }
+            .navigationTitle(url.lastPathComponent)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        player?.pause()
+                        dismiss()
                     }
                 }
+            }
+            .onAppear {
+                let p = AVPlayer(url: url)
+                self.player = p
+                p.play()
+            }
+            .onDisappear {
+                player?.pause()
+            }
         }
     }
 }
 
 // MARK: - Activity View Wrapper (Share Sheet)
+#if canImport(UIKit)
+import UIKit
+
 private struct ActivityViewWrapper: UIViewControllerRepresentable {
     let activityItems: [Any]
 
@@ -324,6 +345,7 @@ private struct ActivityViewWrapper: UIViewControllerRepresentable {
 
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
+#endif
 
 extension URL: @retroactive Identifiable {
     public var id: String { absoluteString }

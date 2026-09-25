@@ -1,4 +1,6 @@
 import Foundation
+import AVFoundation
+import CoreMedia
 import ScrcpyKit
 
 func assertTrue(_ condition: Bool, _ message: String = "", file: StaticString = #file, line: UInt = #line) {
@@ -253,6 +255,103 @@ do {
     }
     sema.wait()
     print("  ✓ StreamRecorder lifecycle tests passed")
+}
+
+// MARK: - StreamRecorder Video + Audio Muxing & Normalized PTS Test
+print("[TEST] StreamRecorder Video + Audio Muxing & Normalized PTS...")
+do {
+    let recorder = StreamRecorder()
+    let filename = "test_muxing_pts_\(UUID().uuidString).mp4"
+    recorder.startRecording(source: .camera, includeAudio: true, customFileName: filename)
+
+    var formatDesc: CMVideoFormatDescription?
+    CMVideoFormatDescriptionCreate(
+        allocator: kCFAllocatorDefault,
+        codecType: kCMVideoCodecType_H264,
+        width: 1280,
+        height: 720,
+        extensions: nil,
+        formatDescriptionOut: &formatDesc
+    )
+
+    let initialPtsUs: Int64 = 50_000_000 // 50 seconds in
+    func makeSample(ptsUs: Int64, isKey: Bool) -> CMSampleBuffer {
+        var vData: [UInt8] = [0x00, 0x00, 0x00, 0x05, 0x25, 0x88, 0x84, 0x00, 0x10]
+        var block: CMBlockBuffer?
+        CMBlockBufferCreateWithMemoryBlock(
+            allocator: kCFAllocatorDefault,
+            memoryBlock: nil,
+            blockLength: vData.count,
+            blockAllocator: kCFAllocatorDefault,
+            customBlockSource: nil,
+            offsetToData: 0,
+            dataLength: vData.count,
+            flags: 0,
+            blockBufferOut: &block
+        )
+        CMBlockBufferReplaceDataBytes(with: &vData, blockBuffer: block!, offsetIntoDestination: 0, dataLength: vData.count)
+        var timing = CMSampleTimingInfo(
+            duration: CMTime.invalid,
+            presentationTimeStamp: CMTime(value: ptsUs, timescale: 1_000_000),
+            decodeTimeStamp: .invalid
+        )
+        var sample: CMSampleBuffer?
+        var sizes = [vData.count]
+        CMSampleBufferCreateReady(
+            allocator: kCFAllocatorDefault,
+            dataBuffer: block,
+            formatDescription: formatDesc,
+            sampleCount: 1,
+            sampleTimingEntryCount: 1,
+            sampleTimingArray: &timing,
+            sampleSizeEntryCount: 1,
+            sampleSizeArray: &sizes,
+            sampleBufferOut: &sample
+        )
+        if isKey {
+            let attachments = CMSampleBufferGetSampleAttachmentsArray(sample!, createIfNecessary: true)
+            if let array = attachments as? [NSMutableDictionary], let dict = array.first {
+                dict[kCMSampleAttachmentKey_DependsOnOthers] = kCFBooleanFalse
+            }
+        }
+        return sample!
+    }
+
+    for i in 0..<30 {
+        let pts = initialPtsUs + Int64(i * 33_333)
+        let s = makeSample(ptsUs: pts, isKey: i == 0)
+        recorder.appendVideoSample(s)
+
+        let chunkFrames = 960
+        let chunkSize = chunkFrames * 4
+        let pcmData = Data(count: chunkSize)
+        let audioPts = CMTime(value: pts, timescale: 1_000_000)
+        recorder.appendAudioData(pcmData, pts: audioPts)
+    }
+
+    let sema = DispatchSemaphore(value: 0)
+    Task {
+        do {
+            let recordedURL = try await recorder.stopRecording()
+            assertTrue(recordedURL != nil, "Recorded URL must not be nil")
+            guard let url = recordedURL else { exit(1) }
+            assertTrue(FileManager.default.fileExists(atPath: url.path), "MP4 file must exist")
+
+            let attrs = try FileManager.default.attributesOfItem(atPath: url.path)
+            let fileSize = (attrs[.size] as? Int64) ?? 0
+            print("  -> File size: \(fileSize) bytes")
+            assertTrue(fileSize > 0, "File size must be > 0")
+            assertTrue(fileSize < 100_000, "File size for 1 sec test must be small (< 100KB), not tens of MBs")
+
+            try? FileManager.default.removeItem(at: url)
+            print("  ✓ StreamRecorder Video + Audio Muxing & Normalized PTS passed")
+        } catch {
+            print("❌ Recording test failed: \(error)")
+            exit(1)
+        }
+        sema.signal()
+    }
+    sema.wait()
 }
 
 print("========================================")

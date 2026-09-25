@@ -398,19 +398,21 @@ public final class ScrcpyClient: ObservableObject {
                 // 2. Read audio packet loop (12-byte header + payload)
                 while buffer.count >= 12 {
                     let headerData = Data(buffer.prefix(12))
-                    let packetSize = Int(headerData[8...11].withUnsafeBytes { $0.load(as: UInt32.self).bigEndian })
+                    guard let header = ScrcpyMediaPacketHeader(data: headerData) else {
+                        buffer = Data(buffer.dropFirst(1))
+                        continue
+                    }
 
-                    guard buffer.count >= 12 + packetSize else {
+                    guard buffer.count >= 12 + header.packetSize else {
                         break // Wait for remaining audio payload
                     }
 
                     buffer = Data(buffer.dropFirst(12))
-                    let audioData = Data(buffer.prefix(packetSize))
-                    buffer = Data(buffer.dropFirst(packetSize))
+                    let audioData = Data(buffer.prefix(header.packetSize))
+                    buffer = Data(buffer.dropFirst(header.packetSize))
 
                     self.audioPlayer.enqueue(data: audioData)
-                    let ptsUs = headerData[0...7].withUnsafeBytes { $0.load(as: UInt64.self).bigEndian }
-                    let ptsTime = CMTime(value: Int64(ptsUs), timescale: 1_000_000)
+                    let ptsTime = CMTime(value: Int64(header.pts), timescale: 1_000_000)
                     self.recorder.appendAudioData(audioData, pts: ptsTime)
                 }
             }

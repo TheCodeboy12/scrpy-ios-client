@@ -28,7 +28,9 @@ public final class StreamRecorder: ObservableObject, @unchecked Sendable {
 
     private var targetURL: URL?
     private var isAudioIncluded: Bool = false
-    private var sessionStartTime: CMTime = .invalid
+    private var firstVideoPts: CMTime = .invalid
+    private var lastVideoPts: CMTime = .invalid
+    private var lastAudioPts: CMTime = .invalid
     private var timerTask: Task<Void, Never>?
 
     // Audio format description cache
@@ -79,7 +81,9 @@ public final class StreamRecorder: ObservableObject, @unchecked Sendable {
 
         self.targetURL = outputURL
         self.isAudioIncluded = includeAudio
-        self.sessionStartTime = .invalid
+        self.firstVideoPts = .invalid
+        self.lastVideoPts = .invalid
+        self.lastAudioPts = .invalid
         self.state = .waitingForFirstKeyframe
 
         Task { @MainActor in
@@ -146,13 +150,30 @@ public final class StreamRecorder: ObservableObject, @unchecked Sendable {
                 }
 
                 let pts = sampleBuffer.presentationTimeStamp
-                writer.startSession(atSourceTime: pts)
-                self.sessionStartTime = pts
+                writer.startSession(atSourceTime: .zero)
+                self.firstVideoPts = pts
+                self.lastVideoPts = .zero
+                self.lastAudioPts = .invalid
                 self.assetWriter = writer
                 self.videoInput = vInput
 
-                if vInput.isReadyForMoreMediaData {
-                    vInput.append(sampleBuffer)
+                // Re-time initial keyframe to .zero
+                var timingInfo = CMSampleTimingInfo(
+                    duration: sampleBuffer.duration.isValid ? sampleBuffer.duration : CMTime.invalid,
+                    presentationTimeStamp: .zero,
+                    decodeTimeStamp: .invalid
+                )
+                var reTimedBuffer: CMSampleBuffer?
+                let status = CMSampleBufferCreateCopyWithNewTiming(
+                    allocator: kCFAllocatorDefault,
+                    sampleBuffer: sampleBuffer,
+                    sampleTimingEntryCount: 1,
+                    sampleTimingArray: &timingInfo,
+                    sampleBufferOut: &reTimedBuffer
+                )
+
+                if status == noErr, let buffer = reTimedBuffer, vInput.isReadyForMoreMediaData {
+                    vInput.append(buffer)
                 }
 
                 let startDate = Date()
@@ -161,7 +182,7 @@ public final class StreamRecorder: ObservableObject, @unchecked Sendable {
                 // Start duration timer
                 startDurationTimer(startDate: startDate)
 
-                print("[StreamRecorder] Recording started with initial keyframe at PTS \(pts.seconds)s")
+                print("[StreamRecorder] Recording started with initial keyframe (source PTS: \(pts.seconds)s -> normalized to 0.0s)")
             } catch {
                 print("[StreamRecorder] Failed to create AVAssetWriter: \(error)")
                 self.state = .idle
@@ -170,7 +191,33 @@ public final class StreamRecorder: ObservableObject, @unchecked Sendable {
 
         case .recording:
             guard let vInput = videoInput, vInput.isReadyForMoreMediaData else { return }
-            vInput.append(sampleBuffer)
+            guard firstVideoPts.isValid else { return }
+
+            let rawRelPts = CMTimeSubtract(sampleBuffer.presentationTimeStamp, firstVideoPts)
+            var relPts = (rawRelPts < .zero) ? .zero : rawRelPts
+
+            if lastVideoPts.isValid && relPts <= lastVideoPts {
+                relPts = CMTimeAdd(lastVideoPts, CMTime(value: 1, timescale: 1000))
+            }
+            lastVideoPts = relPts
+
+            var timingInfo = CMSampleTimingInfo(
+                duration: sampleBuffer.duration.isValid ? sampleBuffer.duration : CMTime.invalid,
+                presentationTimeStamp: relPts,
+                decodeTimeStamp: .invalid
+            )
+            var reTimedBuffer: CMSampleBuffer?
+            let status = CMSampleBufferCreateCopyWithNewTiming(
+                allocator: kCFAllocatorDefault,
+                sampleBuffer: sampleBuffer,
+                sampleTimingEntryCount: 1,
+                sampleTimingArray: &timingInfo,
+                sampleBufferOut: &reTimedBuffer
+            )
+
+            if status == noErr, let buffer = reTimedBuffer {
+                vInput.append(buffer)
+            }
 
         case .idle, .finishing:
             break
@@ -188,7 +235,24 @@ public final class StreamRecorder: ObservableObject, @unchecked Sendable {
             return
         }
 
-        guard let sampleBuffer = createAudioSampleBuffer(pcmData: pcmData, pts: pts) else {
+        guard firstVideoPts.isValid else { return }
+
+        let frameCount = pcmData.count / 4
+        guard frameCount > 0 else { return }
+
+        let rawRelPts = CMTimeSubtract(pts, firstVideoPts)
+        // Drop any audio packets that occurred before the first video keyframe
+        if rawRelPts < .zero {
+            return
+        }
+
+        var relPts = rawRelPts
+        if lastAudioPts.isValid && relPts <= lastAudioPts {
+            relPts = CMTimeAdd(lastAudioPts, CMTime(value: CMTimeValue(frameCount), timescale: 48000))
+        }
+        lastAudioPts = relPts
+
+        guard let sampleBuffer = createAudioSampleBuffer(pcmData: pcmData, pts: relPts, frameCount: frameCount) else {
             return
         }
 
@@ -218,6 +282,10 @@ public final class StreamRecorder: ObservableObject, @unchecked Sendable {
                 self.videoInput = nil
                 self.audioInput = nil
                 self.targetURL = nil
+                self.firstVideoPts = .invalid
+                self.lastVideoPts = .invalid
+                self.lastAudioPts = .invalid
+                self.audioFormatDescription = nil
                 self.state = .idle
             }
             Task { @MainActor in
@@ -247,7 +315,7 @@ public final class StreamRecorder: ObservableObject, @unchecked Sendable {
 
         print("[StreamRecorder] Successfully recorded MP4: \(fileURL?.path ?? "")")
         if let url = fileURL {
-            await MainActor.run {
+            Task { @MainActor in
                 self.lastRecordedURL = url
             }
         }
@@ -280,7 +348,7 @@ public final class StreamRecorder: ObservableObject, @unchecked Sendable {
         return true
     }
 
-    private func createAudioSampleBuffer(pcmData: Data, pts: CMTime) -> CMSampleBuffer? {
+    private func createAudioSampleBuffer(pcmData: Data, pts: CMTime, frameCount: Int) -> CMSampleBuffer? {
         if audioFormatDescription == nil {
             var asbd = AudioStreamBasicDescription(
                 mSampleRate: 48000.0,
@@ -310,8 +378,6 @@ public final class StreamRecorder: ObservableObject, @unchecked Sendable {
         }
 
         guard let format = audioFormatDescription else { return nil }
-
-        let frameCount = pcmData.count / 4
         guard frameCount > 0 else { return nil }
 
         var blockBuffer: CMBlockBuffer?
